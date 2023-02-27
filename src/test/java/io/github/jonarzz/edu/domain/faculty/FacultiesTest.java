@@ -9,11 +9,14 @@ import java.util.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.common.result.*;
 
-class EducationalInstitutionTest {
+class FacultiesTest {
 
     @Test
     void createFaculty() {
-        var institution = new EducationalInstitution(new HashSet<>());
+        var institution = new Faculties(
+                UUID.randomUUID(),
+                new HashSet<>()
+        );
         var facultyName = "Mathematics";
         var fieldsOfStudy = new FieldsOfStudy("math");
 
@@ -27,10 +30,11 @@ class EducationalInstitutionTest {
     @Test
     void tryToCreateFacultyThatAlreadyExists() {
         var facultyName = "Mathematics";
-        var institution = new EducationalInstitution(Set.of(
-                new Faculty(facultyName, null)
-        ));
         var fieldsOfStudy = new FieldsOfStudy("math");
+        var institution = new Faculties(
+                UUID.randomUUID(),
+                Set.of(new Faculty(facultyName, fieldsOfStudy))
+        );
 
         var result = institution.createFaculty(facultyName, fieldsOfStudy);
 
