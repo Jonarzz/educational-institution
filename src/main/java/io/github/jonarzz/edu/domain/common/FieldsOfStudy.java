@@ -12,6 +12,7 @@ import java.util.stream.*;
 
 @ValueObject
 @EqualsAndHashCode
+@ToString
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class FieldsOfStudy {
 

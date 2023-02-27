@@ -1,8 +1,13 @@
 package io.github.jonarzz.edu.api;
 
-public interface Result {
+import java.util.*;
 
-    // TODO
-    Object toEvent();
+public interface Result<T> {
+
+    boolean isOk();
+
+    Optional<T> getSubject();
+
+    String getMessage();
 
 }

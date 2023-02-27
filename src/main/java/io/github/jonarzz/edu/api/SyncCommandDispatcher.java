@@ -1,9 +1,20 @@
 package io.github.jonarzz.edu.api;
 
-import io.vavr.control.*;
+import static lombok.AccessLevel.*;
 
-public interface SyncCommandDispatcher<I extends Injector> {
+import lombok.*;
+import lombok.experimental.*;
 
-    <C extends Command<I>> Either<FailedResult, SuccessfulResult> handle(C command);
+import io.github.jonarzz.edu.domain.*;
 
+@RequiredArgsConstructor
+@FieldDefaults(level = PRIVATE, makeFinal = true)
+public class SyncCommandDispatcher {
+
+    DomainInjector injector;
+
+    public Result<?> handle(Command command) {
+        return command.getHandler(injector)
+                      .handle(command);
+    }
 }

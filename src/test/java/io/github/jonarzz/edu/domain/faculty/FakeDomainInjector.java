@@ -4,8 +4,11 @@ import static lombok.AccessLevel.*;
 
 import lombok.experimental.*;
 
+import io.github.jonarzz.edu.domain.*;
+import io.github.jonarzz.edu.domain.professor.*;
+
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class FakeFacultyInjector implements FacultyInjector {
+class FakeDomainInjector implements DomainInjector {
 
     FacultyRepository repository = new FakeFacultyRepository();
 
@@ -15,7 +18,7 @@ class FakeFacultyInjector implements FacultyInjector {
     }
 
     @Override
-    public FacultyRepository educationalInstitutionRepository() {
+    public FacultyRepository facultyRepository() {
         return repository;
     }
 }

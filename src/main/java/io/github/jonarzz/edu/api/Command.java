@@ -1,7 +1,9 @@
 package io.github.jonarzz.edu.api;
 
-public interface Command<I extends Injector> {
+import io.github.jonarzz.edu.domain.*;
 
-    <C extends Command<I>> CommandHandler<C, I> getHandler(I injector);
+public interface Command {
+
+    <C extends Command> CommandHandler<C, ?> getHandler(DomainInjector injector);
 
 }
