@@ -9,18 +9,21 @@ import java.util.*;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 class FakeFacultyRepository implements FacultyRepository {
 
-    Map<UUID, FacultiesView> institutionsById = new HashMap<>();
+    Map<UUID, Collection<FacultyView>> facultiesByInstitutionId = new HashMap<>();
 
     @Override
-    public Optional<FacultiesView> findByEducationalInstitutionId(UUID institutionId) {
-        return Optional.ofNullable(institutionsById.get(institutionId));
+    public FacultiesView getByEducationalInstitutionId(UUID institutionId) {
+        return new FacultiesView(
+                institutionId,
+                facultiesByInstitutionId.getOrDefault(institutionId, Set.of())
+        );
     }
 
     @Override
-    public void save(FacultiesView faculties) {
-        institutionsById.put(
-                faculties.educationalInstitutionId(),
-                faculties
-        );
+    public void save(UUID institutionId, FacultyView faculty) {
+        facultiesByInstitutionId.computeIfAbsent(
+                institutionId,
+                id -> new HashSet<>()
+        ).add(faculty);
     }
 }

@@ -4,7 +4,7 @@ import java.util.*;
 
 public interface FacultyRepository {
 
-    Optional<FacultiesView> findByEducationalInstitutionId(UUID institutionId);
+    FacultiesView getByEducationalInstitutionId(UUID institutionId);
 
-    void save(FacultiesView faculties);
+    void save(UUID institutionId, FacultyView faculty);
 }

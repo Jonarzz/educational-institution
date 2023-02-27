@@ -10,4 +10,12 @@ public record FacultyView(
         FieldsOfStudy fieldsOfStudy
 ) {
 
+    Faculty toDomainObject() {
+        return new Faculty(
+                id,
+                name,
+                fieldsOfStudy
+        );
+    }
+
 }
