@@ -1,4 +1,6 @@
 # Educational institution
+![GitHub actions](https://github.com/Jonarzz/educational-institution/workflows/Java%20CI%20with%20Maven/badge.svg) 
+
 ## Preface
 - `N`, `M` etc. in the description below means a value that is based on configuration
   (varies between sentences - `N` means "a value", not the same value in multiple places)
