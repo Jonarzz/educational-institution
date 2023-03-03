@@ -27,13 +27,13 @@ class ProfessorEmploymentCommandHandler implements CommandHandler<EmployProfesso
                                                       .equals(facultyName))
                             .findFirst()
                             .map(facultyView -> {
-                                var faculty = facultyView.toDomainObject()
-                                                         .withConfiguration(facultyConfiguration);
+                                var faculty = facultyView.toDomainObject(facultyConfiguration);
                                 var result = faculty.employ(command.candidate());
                                 if (result.isOk()) {
                                     var professor = result.getSubject()
                                                           .orElseThrow(() -> new IllegalStateException(
                                                                   "No subject returned after employing a professor"));
+                                    // TODO save faculty, not a professor
                                     professorRepository.save(facultyView.id(), professor);
                                 }
                                 return result;

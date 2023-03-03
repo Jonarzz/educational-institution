@@ -4,7 +4,8 @@ import lombok.*;
 
 @Builder
 record FakeFacultyConfiguration(
-        int minimumProfessorYearsOfExperience
+        int minimumProfessorYearsOfExperience,
+        int minimumNumberOfMatchingFieldsOfStudy
 ) implements FacultyConfiguration {
 
 }

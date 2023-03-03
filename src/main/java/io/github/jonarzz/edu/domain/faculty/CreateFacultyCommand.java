@@ -9,7 +9,8 @@ import io.github.jonarzz.edu.domain.common.*;
 public record CreateFacultyCommand(
         UUID educationalInstitutionId,
         String name,
-        FieldsOfStudy fieldsOfStudy
+        FieldsOfStudy fieldsOfStudy,
+        Vacancies maxProfessorVacancies
 ) implements Command {
 
     @Override

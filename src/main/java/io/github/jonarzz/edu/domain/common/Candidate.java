@@ -1,7 +1,11 @@
 package io.github.jonarzz.edu.domain.common;
 
+import lombok.*;
+
+@Builder
 public record Candidate(
-        int yearsOfExperience
+        int yearsOfExperience,
+        FieldsOfStudy fieldsOfStudy
 ) {
 
 }

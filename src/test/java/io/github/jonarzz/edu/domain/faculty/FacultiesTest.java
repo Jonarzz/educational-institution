@@ -9,6 +9,7 @@ import java.util.*;
 
 import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.domain.common.*;
+import io.github.jonarzz.edu.domain.professor.*;
 
 class FacultiesTest {
 
@@ -16,9 +17,10 @@ class FacultiesTest {
     void createFaculty() {
         var faculties = new Faculties(Set.of());
         var facultyName = "Mathematics";
-        var fieldsOfStudy = new FieldsOfStudy("math");
+        var fieldsOfStudy = FieldsOfStudy.from("math");
+        var maxProfessorVacancies = new Vacancies(1);
 
-        var result = faculties.createFaculty(facultyName, fieldsOfStudy);
+        var result = faculties.createFaculty(facultyName, fieldsOfStudy, maxProfessorVacancies);
 
         assertThat(result)
                 .as(result.toString())
@@ -32,16 +34,20 @@ class FacultiesTest {
     @Test
     void tryToCreateFacultyThatAlreadyExists() {
         var facultyName = "Mathematics";
-        var fieldsOfStudy = new FieldsOfStudy("math");
+        var fieldsOfStudy = FieldsOfStudy.from("math");
+        var maxProfessorVacancies = new Vacancies(1);
+        var employedProfessors = Set.<ProfessorView>of();
         var faculties = new Faculties(Set.of(
                 new FacultyView(
                         UUID.randomUUID(),
                         facultyName,
-                        fieldsOfStudy
+                        fieldsOfStudy,
+                        employedProfessors,
+                        maxProfessorVacancies
                 )
         ));
 
-        var result = faculties.createFaculty(facultyName, fieldsOfStudy);
+        var result = faculties.createFaculty(facultyName, fieldsOfStudy, maxProfessorVacancies);
 
         assertThat(result)
                 .as(result.toString())

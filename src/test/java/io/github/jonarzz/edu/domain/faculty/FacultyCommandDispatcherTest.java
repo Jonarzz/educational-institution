@@ -19,10 +19,13 @@ class FacultyCommandDispatcherTest {
     void successfullyHandleFacultyCreationCommand() {
         var institutionId = UUID.randomUUID();
         var facultyName = "faculty name";
-        var fieldsOfStudy = new FieldsOfStudy("test field of study");
-        var command = new CreateFacultyCommand(institutionId, facultyName, fieldsOfStudy);
+        var fieldsOfStudy = FieldsOfStudy.from("test field of study");
+        var maxProfessorVacancies = new Vacancies(1);
+        var command = new CreateFacultyCommand(institutionId, facultyName, fieldsOfStudy, maxProfessorVacancies);
         injector.facultyRepository()
-                .save(institutionId, new FacultyView(institutionId, "existing faculty", fieldsOfStudy));
+                .save(institutionId, new FacultyView(
+                        institutionId, "existing faculty", fieldsOfStudy, Set.of(), maxProfessorVacancies
+                ));
 
         var result = dispatcher.handle(command);
 
@@ -35,10 +38,13 @@ class FacultyCommandDispatcherTest {
     void handleErrorForFacultyCreationCommand() {
         var institutionId = UUID.randomUUID();
         var facultyName = "faculty name";
-        var fieldsOfStudy = new FieldsOfStudy("test field of study");
-        var command = new CreateFacultyCommand(institutionId, facultyName, fieldsOfStudy);
+        var fieldsOfStudy = FieldsOfStudy.from("test field of study");
+        var maxProfessorVacancies = new Vacancies(1);
+        var command = new CreateFacultyCommand(institutionId, facultyName, fieldsOfStudy, maxProfessorVacancies);
         injector.facultyRepository()
-                .save(institutionId, new FacultyView(institutionId, facultyName, fieldsOfStudy));
+                .save(institutionId, new FacultyView(
+                        institutionId, facultyName, fieldsOfStudy, Set.of(), maxProfessorVacancies
+                ));
 
         var result = dispatcher.handle(command);
 

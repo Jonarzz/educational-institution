@@ -15,7 +15,8 @@ for professors and students have to match.
 
 ### Professor
 Professors may be **employed** if specific rules are met:
-- the faculty they apply for matches their **fields of study** - at least N fields of study have to match
+- the faculty they apply for matches their **fields of study** - at least N fields of study have to match,
+  or all if faculty has less than N fields of study
 - there is a vacancy in the faculty
 - they have at least N years of experience
 

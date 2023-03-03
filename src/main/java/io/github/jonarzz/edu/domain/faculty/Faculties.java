@@ -23,14 +23,15 @@ final class Faculties {
         return new Faculties(view.faculties());
     }
 
-    Result<FacultyView> createFaculty(String name, FieldsOfStudy fieldsOfStudy) {
+    Result<FacultyView> createFaculty(String name, FieldsOfStudy fieldsOfStudy,
+                                      Vacancies maxProfessorVacancies) {
         var facultyAlreadyExists = existingFaculties.stream()
                                                     .map(FacultyView::name)
                                                     .anyMatch(name::equals);
         if (facultyAlreadyExists) {
             return new AlreadyExists<>("faculty", "name", name);
         }
-        var faculty = new Faculty(name, fieldsOfStudy);
+        var faculty = new NewFaculty(name, fieldsOfStudy, maxProfessorVacancies);
         return new Created<>(faculty.toView());
     }
 }
