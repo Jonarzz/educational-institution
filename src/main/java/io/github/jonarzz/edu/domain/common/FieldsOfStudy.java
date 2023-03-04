@@ -15,43 +15,42 @@ import java.util.stream.*;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class FieldsOfStudy {
 
-    Set<String> fieldsOfStudy;
+    Set<String> names;
 
-    private FieldsOfStudy(Collection<String> fieldsOfStudy) {
-        this.fieldsOfStudy = Set.copyOf(fieldsOfStudy);
+    private FieldsOfStudy(Collection<String> names) {
+        this.names = Set.copyOf(names);
     }
 
-    public static FieldsOfStudy from(String first, String... other) {
-        return from(Stream.concat(Stream.of(first),
-                                  Arrays.stream(other))
+    public static FieldsOfStudy from(String firstName, String... otherNames) {
+        return from(Stream.concat(Stream.of(firstName),
+                                  Arrays.stream(otherNames))
                           .map(String::toLowerCase)
                           .collect(toUnmodifiableSet()));
     }
 
-    public static FieldsOfStudy from(Collection<String> fieldsOfStudy) {
-        if (fieldsOfStudy.isEmpty()) {
+    public static FieldsOfStudy from(Collection<String> names) {
+        if (names.isEmpty()) {
             throw new IllegalArgumentException("At least one field of study required");
         }
-        return new FieldsOfStudy(fieldsOfStudy);
+        return new FieldsOfStudy(names);
     }
 
     public FieldsOfStudy matching(FieldsOfStudy other) {
         return new FieldsOfStudy(
-                other.fieldsOfStudy
-                        .stream()
-                        .filter(fieldsOfStudy::contains)
-                        .collect(toSet())
+                other.names.stream()
+                           .filter(names::contains)
+                           .collect(toSet())
         );
     }
 
     public int count() {
-        return fieldsOfStudy.size();
+        return names.size();
     }
 
     @Override
     public String toString() {
-        return fieldsOfStudy.stream()
-                            .sorted()
-                            .collect(joining(", "));
+        return names.stream()
+                    .sorted()
+                    .collect(joining(", "));
     }
 }

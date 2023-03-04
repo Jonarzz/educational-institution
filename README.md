@@ -1,5 +1,8 @@
 # Educational institution
-![GitHub actions](https://github.com/Jonarzz/educational-institution/workflows/Java%20CI%20with%20Maven/badge.svg) 
+![GitHub actions](https://github.com/Jonarzz/educational-institution/workflows/Java%20CI%20with%20Maven/badge.svg)
+![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Jonarzz_educational-institution&metric=sqale_rating)
+![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=Jonarzz_educational-institution&metric=sqale_index)
+![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Jonarzz_educational-institution&metric=coverage)
 
 ## Preface
 - `N`, `M` etc. in the description below means a value that is based on configuration

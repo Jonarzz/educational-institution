@@ -13,7 +13,7 @@ public class SyncCommandDispatcher {
 
     DomainInjector injector;
 
-    public Result<?> handle(Command command) {
+    public Result<Object> handle(Command command) {
         return command.getHandler(injector)
                       .handle(command);
     }
