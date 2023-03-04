@@ -38,7 +38,7 @@ final class Faculty extends NewFaculty {
                 .<Result<ProfessorView>>flatMap(Optional::stream)
                 .findFirst()
                 .orElseGet(() -> {
-                    var newProfessor = new ProfessorView();
+                    var newProfessor = new ProfessorView(candidate.personalData());
                     employedProfessors.add(newProfessor);
                     return new Created<>(newProfessor);
                 });
@@ -46,9 +46,10 @@ final class Faculty extends NewFaculty {
 
     private Stream<ProfessorEmploymentRule> professorEmploymentRules() {
         return Stream.of(
-                new ProfessorYearsOfExperienceRule(config),
-                new ProfessorFieldsOfStudyRule(config),
-                new ProfessorEmploymentVacancyRule()
+                new YearsOfExperienceRule(config),
+                new FieldsOfStudyRule(config),
+                new VacancyRule(),
+                new NoDuplicatedEmploymentRule()
         );
     }
 
@@ -68,7 +69,7 @@ final class Faculty extends NewFaculty {
         Optional<RuleViolated<ProfessorView>> validate(Candidate candidate);
     }
 
-    private record ProfessorYearsOfExperienceRule(FacultyConfiguration config) implements ProfessorEmploymentRule {
+    private record YearsOfExperienceRule(FacultyConfiguration config) implements ProfessorEmploymentRule {
 
         @Override
         public Optional<RuleViolated<ProfessorView>> validate(Candidate candidate) {
@@ -86,7 +87,7 @@ final class Faculty extends NewFaculty {
 
     @RequiredArgsConstructor
     @FieldDefaults(level = PRIVATE, makeFinal = true)
-    private class ProfessorFieldsOfStudyRule implements ProfessorEmploymentRule {
+    private class FieldsOfStudyRule implements ProfessorEmploymentRule {
 
         FacultyConfiguration config;
 
@@ -118,7 +119,7 @@ final class Faculty extends NewFaculty {
         }
     }
 
-    private class ProfessorEmploymentVacancyRule implements ProfessorEmploymentRule {
+    private class VacancyRule implements ProfessorEmploymentRule {
 
         @Override
         public Optional<RuleViolated<ProfessorView>> validate(Candidate candidate) {
@@ -128,6 +129,28 @@ final class Faculty extends NewFaculty {
                 );
             }
             return Optional.empty();
+        }
+    }
+
+    private class NoDuplicatedEmploymentRule implements ProfessorEmploymentRule {
+
+        @Override
+        public Optional<RuleViolated<ProfessorView>> validate(Candidate candidate) {
+            if (alreadyEmployed(candidate)) {
+                return Optional.of(
+                        new RuleViolated<>("The professor is already employed")
+                );
+            }
+            return Optional.empty();
+        }
+
+        private boolean alreadyEmployed(Candidate candidate) {
+            var candidateNationalId = candidate.personalData()
+                                               .nationalIdNumber();
+            return employedProfessors.stream()
+                                     .map(ProfessorView::personalData)
+                                     .map(PersonalData::nationalIdNumber)
+                                     .anyMatch(candidateNationalId::equals);
         }
     }
 }

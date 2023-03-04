@@ -10,7 +10,7 @@ public record NotFound<T>(
 
     @Override
     public String getMessage() {
-        return "Not found %s with %s = %s".formatted(
+        return "Not found %s with %s '%s'".formatted(
                 entityName.toLowerCase(), identifyingField, fieldValue);
     }
 }

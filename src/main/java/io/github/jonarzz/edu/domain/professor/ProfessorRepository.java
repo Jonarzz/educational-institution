@@ -4,5 +4,7 @@ import java.util.*;
 
 public interface ProfessorRepository {
 
+    Collection<ProfessorView> getByFacultyId(UUID facultyId);
+
     void save(UUID facultyId, ProfessorView professor);
 }

@@ -17,6 +17,8 @@ import io.github.jonarzz.edu.domain.professor.*;
 
 class FacultyTest {
 
+    static final PersonalData PERSONAL_DATA = new PersonalData("John Doe", "912310012A");
+
     @ParameterizedTest(name = "years of experience = {0}")
     @ValueSource(ints = {5, 6, 7, 10, 20})
     void employCandidateAsProfessor(int yearsOfExperience) {
@@ -36,7 +38,8 @@ class FacultyTest {
         );
         var candidate = new Candidate(
                 yearsOfExperience,
-                FieldsOfStudy.from("math", "physics")
+                FieldsOfStudy.from("math", "physics"),
+                PERSONAL_DATA
         );
 
         var result = faculty.employ(candidate);
@@ -61,7 +64,7 @@ class FacultyTest {
                 new Vacancies(1),
                 config
         );
-        var candidate = new Candidate(minYearsOfExperience, fieldsOfStudy);
+        var candidate = new Candidate(minYearsOfExperience, fieldsOfStudy, PERSONAL_DATA);
 
         var result = faculty.employ(candidate);
 
@@ -85,7 +88,7 @@ class FacultyTest {
                 new Vacancies(1),
                 config
         );
-        var candidate = new Candidate(minYearsOfExperience, fieldsOfStudy);
+        var candidate = new Candidate(minYearsOfExperience, fieldsOfStudy, PERSONAL_DATA);
 
         var result = faculty.employ(candidate);
 
@@ -110,7 +113,7 @@ class FacultyTest {
                 new Vacancies(1),
                 config
         );
-        var candidate = new Candidate(yearsOfExperience, fieldsOfStudy);
+        var candidate = new Candidate(yearsOfExperience, fieldsOfStudy, PERSONAL_DATA);
 
         var result = faculty.employ(candidate);
 
@@ -150,7 +153,8 @@ class FacultyTest {
         );
         var candidate = new Candidate(
                 minYearsOfExperience,
-                fieldsOfStudyFrom(candidateValues)
+                fieldsOfStudyFrom(candidateValues),
+                PERSONAL_DATA
         );
 
         var result = faculty.employ(candidate);
@@ -178,12 +182,13 @@ class FacultyTest {
                 randomUUID(),
                 "Mathematics",
                 fieldsOfStudy,
-                Set.of(new ProfessorView()),
+                Set.of(new ProfessorView(new PersonalData("John Doe", "1234"))),
                 new Vacancies(1),
                 config
         );
         int yearsOfExperience = 10;
-        var candidate = new Candidate(yearsOfExperience, fieldsOfStudy);
+        var candidate = new Candidate(yearsOfExperience, fieldsOfStudy,
+                                      new PersonalData("Carol Smith", "9120"));
 
         var result = faculty.employ(candidate);
 
@@ -191,6 +196,34 @@ class FacultyTest {
                 .as(result.toString())
                 .returns(false, Result::isOk)
                 .returns("There is no vacancy", Result::getMessage);
+    }
+
+    @Test
+    void rejectCandidateForProfessor_alreadyEmployed() {
+        var minYearsOfExperience = 5;
+        var minNumberOfMatchingFieldsOfStudy = 2;
+        var config = new FakeFacultyConfiguration(
+                minYearsOfExperience,
+                minNumberOfMatchingFieldsOfStudy
+        );
+        var fieldsOfStudy = FieldsOfStudy.from("math");
+        var faculty = new Faculty(
+                randomUUID(),
+                "Mathematics",
+                fieldsOfStudy,
+                Set.of(new ProfessorView(PERSONAL_DATA)),
+                new Vacancies(2),
+                config
+        );
+        int yearsOfExperience = 10;
+        var candidate = new Candidate(yearsOfExperience, fieldsOfStudy, PERSONAL_DATA);
+
+        var result = faculty.employ(candidate);
+
+        assertThat(result)
+                .as(result.toString())
+                .returns(false, Result::isOk)
+                .returns("The professor is already employed", Result::getMessage);
     }
 
     private static FieldsOfStudy fieldsOfStudyFrom(String csv) {

@@ -5,7 +5,8 @@ import lombok.*;
 @Builder
 public record Candidate(
         int yearsOfExperience,
-        FieldsOfStudy fieldsOfStudy
+        FieldsOfStudy fieldsOfStudy,
+        PersonalData personalData
 ) {
 
 }

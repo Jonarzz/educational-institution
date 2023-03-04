@@ -11,7 +11,7 @@ import io.github.jonarzz.edu.domain.professor.*;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class ProfessorEmploymentCommandHandler implements CommandHandler<EmployProfessorCommand, ProfessorView> {
+class EmployProfessorCommandHandler implements CommandHandler<EmployProfessorCommand, ProfessorView> {
 
     FacultyConfiguration facultyConfiguration;
     FacultyRepository facultyRepository;
@@ -20,7 +20,8 @@ class ProfessorEmploymentCommandHandler implements CommandHandler<EmployProfesso
     @Override
     public Result<ProfessorView> handle(EmployProfessorCommand command) {
         var facultyName = command.facultyName();
-        var facultiesView = facultyRepository.getByEducationalInstitutionId(command.educationalInstitutionId());
+        var institutionId = command.educationalInstitutionId();
+        var facultiesView = facultyRepository.getByEducationalInstitutionId(institutionId);
         return facultiesView.faculties()
                             .stream()
                             .filter(faculty -> faculty.name()
@@ -33,7 +34,6 @@ class ProfessorEmploymentCommandHandler implements CommandHandler<EmployProfesso
                                     var professor = result.getSubject()
                                                           .orElseThrow(() -> new IllegalStateException(
                                                                   "No subject returned after employing a professor"));
-                                    // TODO save faculty, not a professor
                                     professorRepository.save(facultyView.id(), professor);
                                 }
                                 return result;

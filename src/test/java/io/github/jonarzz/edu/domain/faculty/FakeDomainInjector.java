@@ -10,11 +10,9 @@ import io.github.jonarzz.edu.domain.professor.*;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 class FakeDomainInjector implements DomainInjector {
 
-    FacultyConfiguration facultyConfiguration =
-            FakeFacultyConfiguration.builder()
-                                    .minimumProfessorYearsOfExperience(5)
-                                    .build();
-    FacultyRepository repository = new FakeFacultyRepository();
+    FacultyConfiguration facultyConfiguration = new FakeFacultyConfiguration();
+    FacultyRepository facultyRepository = new FakeFacultyRepository();
+    FakeProfessorRepository professorRepository = new FakeProfessorRepository();
 
     @Override
     public FacultyConfiguration facultyConfiguration() {
@@ -23,11 +21,11 @@ class FakeDomainInjector implements DomainInjector {
 
     @Override
     public FacultyRepository facultyRepository() {
-        return repository;
+        return facultyRepository;
     }
 
     @Override
     public ProfessorRepository professorRepository() {
-        return null; // TODO
+        return professorRepository;
     }
 }

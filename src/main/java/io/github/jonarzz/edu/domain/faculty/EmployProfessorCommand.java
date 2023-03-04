@@ -14,8 +14,8 @@ public record EmployProfessorCommand(
 
     @Override
     @SuppressWarnings("unchecked")
-    public ProfessorEmploymentCommandHandler getHandler(DomainInjector injector) {
-        return new ProfessorEmploymentCommandHandler(
+    public EmployProfessorCommandHandler getHandler(DomainInjector injector) {
+        return new EmployProfessorCommandHandler(
                 injector.facultyConfiguration(),
                 injector.facultyRepository(),
                 injector.professorRepository()
