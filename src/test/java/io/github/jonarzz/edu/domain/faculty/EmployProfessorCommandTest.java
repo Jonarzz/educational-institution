@@ -30,7 +30,7 @@ class EmployProfessorCommandTest {
         var command = new EmployProfessorCommand(institutionId, facultyName, new Candidate(
                 DEFAULT_MIN_PROF_YEARS_OF_EXPERIENCE, fieldsOfStudy, PERSONAL_DATA
         ));
-        facultyRepository.save(institutionId, new FacultyView(
+        facultyRepository.create(institutionId, new FacultyView(
                 facultyId, facultyName, fieldsOfStudy, Set.of(), new Vacancies(1)
         ));
 
@@ -55,7 +55,7 @@ class EmployProfessorCommandTest {
         var command = new EmployProfessorCommand(institutionId, facultyName, new Candidate(
                 yearsOfExperience, fieldsOfStudy, PERSONAL_DATA
         ));
-        facultyRepository.save(institutionId, new FacultyView(
+        facultyRepository.create(institutionId, new FacultyView(
                 facultyId, facultyName, fieldsOfStudy, Set.of(), new Vacancies(1)
         ));
 
@@ -79,7 +79,7 @@ class EmployProfessorCommandTest {
         var command = new EmployProfessorCommand(institutionId, facultyName, new Candidate(
                 yearsOfExperience, fieldsOfStudy, PERSONAL_DATA
         ));
-        facultyRepository.save(institutionId, new FacultyView(
+        facultyRepository.create(institutionId, new FacultyView(
                 facultyId, "Physics", fieldsOfStudy, Set.of(), new Vacancies(1)
         ));
 

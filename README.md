@@ -25,6 +25,9 @@ Professors may be **employed** if specific rules are met:
 - there is a vacancy in the faculty
 - they have at least N years of experience
 
+Professors may **resign**.
+A notification to an external system has to be sent upon that event.
+
 ### Student
 Students may be **enrolled** if specific rules are met:
 - number of students within the faculty is less than N

@@ -23,7 +23,7 @@ class CreateFacultyCommandTest {
         var fieldsOfStudy = FieldsOfStudy.from("test field of study");
         var maxProfessorVacancies = new Vacancies(1);
         var command = new CreateFacultyCommand(institutionId, newFacultyName, fieldsOfStudy, maxProfessorVacancies);
-        facultyRepository.save(institutionId, new FacultyView(
+        facultyRepository.create(institutionId, new FacultyView(
                 institutionId, "existing faculty", fieldsOfStudy, Set.of(), maxProfessorVacancies
         ));
 
@@ -46,7 +46,7 @@ class CreateFacultyCommandTest {
         var fieldsOfStudy = FieldsOfStudy.from("test field of study");
         var maxProfessorVacancies = new Vacancies(1);
         var command = new CreateFacultyCommand(institutionId, facultyName, fieldsOfStudy, maxProfessorVacancies);
-        facultyRepository.save(institutionId, new FacultyView(
+        facultyRepository.create(institutionId, new FacultyView(
                 institutionId, facultyName, fieldsOfStudy, Set.of(), maxProfessorVacancies
         ));
 

@@ -33,10 +33,7 @@ class EmployProfessorCommandHandler implements CommandHandler<EmployProfessorCom
                                 var faculty = facultyView.toDomainObject(facultyConfiguration);
                                 var result = faculty.employ(command.candidate());
                                 if (result.isOk()) {
-                                    var professor = result.getSubject()
-                                                          .orElseThrow(() -> new IllegalStateException(
-                                                                  "No subject returned after employing a professor"));
-                                    professorRepository.save(facultyView.id(), professor);
+                                    professorRepository.create(facultyView.id(), result.getSubject());
                                 }
                                 return result;
                             })

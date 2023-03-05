@@ -9,5 +9,5 @@ public interface FacultyRepository {
 
     FacultiesView getByEducationalInstitutionId(UUID institutionId);
 
-    void save(UUID institutionId, FacultyView faculty);
+    void create(UUID institutionId, FacultyView faculty);
 }

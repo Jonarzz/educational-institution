@@ -7,7 +7,11 @@ import java.util.*;
 @Repository
 public interface ProfessorRepository {
 
+    ProfessorView getById(UUID professorId);
+
     Collection<ProfessorView> getByFacultyId(UUID facultyId);
 
-    void save(UUID facultyId, ProfessorView professor);
+    void create(UUID facultyId, ProfessorView professor);
+
+    void update(ProfessorView professor);
 }

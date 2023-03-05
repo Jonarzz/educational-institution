@@ -24,10 +24,7 @@ class CreateFacultyCommandHandler implements CommandHandler<CreateFacultyCommand
                                              command.fieldsOfStudy(),
                                              command.maxProfessorVacancies());
         if (result.isOk()) {
-            var faculty = result.getSubject()
-                                .orElseThrow(() -> new IllegalStateException(
-                                        "No subject returned after creating a faculty"));
-            facultyRepository.save(institutionId, faculty);
+            facultyRepository.create(institutionId, result.getSubject());
         }
         return result;
     }

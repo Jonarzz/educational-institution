@@ -3,7 +3,6 @@ package io.github.jonarzz.edu.domain.faculty;
 import static java.util.UUID.*;
 import static java.util.stream.Collectors.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.InstanceOfAssertFactories.*;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
@@ -240,8 +239,7 @@ class FacultyTest {
         assertThat(result)
                 .as(result.toString())
                 .returns(true, Result::isOk)
-                .extracting(Result::getSubject, optional(ProfessorView.class))
-                .get()
+                .extracting(Result::getSubject)
                 .returns(null, ProfessorView::id);
     }
 }

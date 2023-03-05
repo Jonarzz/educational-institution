@@ -1,7 +1,5 @@
 package io.github.jonarzz.edu.api;
 
-import java.util.*;
-
 public interface FailedResult<T> extends Result<T> {
 
     @Override
@@ -10,7 +8,7 @@ public interface FailedResult<T> extends Result<T> {
     }
 
     @Override
-    default Optional<T> getSubject() {
-        return Optional.empty();
+    default T getSubject() {
+        return null;
     }
 }

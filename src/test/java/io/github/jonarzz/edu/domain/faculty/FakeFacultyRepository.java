@@ -7,7 +7,7 @@ import lombok.experimental.*;
 import java.util.*;
 
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class FakeFacultyRepository implements FacultyRepository {
+public class FakeFacultyRepository implements FacultyRepository {
 
     Map<UUID, Collection<FacultyView>> facultiesByInstitutionId = new HashMap<>();
 
@@ -20,7 +20,7 @@ class FakeFacultyRepository implements FacultyRepository {
     }
 
     @Override
-    public void save(UUID institutionId, FacultyView faculty) {
+    public void create(UUID institutionId, FacultyView faculty) {
         facultiesByInstitutionId.computeIfAbsent(
                 institutionId,
                 id -> new HashSet<>()

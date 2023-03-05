@@ -1,7 +1,6 @@
 package io.github.jonarzz.edu.domain.faculty;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.InstanceOfAssertFactories.*;
 
 import org.junit.jupiter.api.*;
 
@@ -25,8 +24,7 @@ class FacultiesTest {
         assertThat(result)
                 .as(result.toString())
                 .returns(true, Result::isOk)
-                .extracting(Result::getSubject, optional(FacultyView.class))
-                .get()
+                .extracting(Result::getSubject)
                 .returns(facultyName, FacultyView::name)
                 .returns(fieldsOfStudy, FacultyView::fieldsOfStudy);
     }

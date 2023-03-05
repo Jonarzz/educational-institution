@@ -2,7 +2,7 @@ package io.github.jonarzz.edu.api.result;
 
 import io.github.jonarzz.edu.api.*;
 
-public record Created<T>(
+public record Done<T>(
         T subject
 ) implements SuccessfulResult<T> {
 
@@ -13,6 +13,6 @@ public record Created<T>(
 
     @Override
     public String getMessage() {
-        return "Created " + subject;
+        return "Action done on " + subject;
     }
 }
