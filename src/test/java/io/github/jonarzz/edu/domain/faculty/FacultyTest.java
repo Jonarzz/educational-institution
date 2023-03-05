@@ -17,7 +17,7 @@ import io.github.jonarzz.edu.domain.professor.*;
 
 class FacultyTest {
 
-    static final PersonalData PERSONAL_DATA = new PersonalData("John Doe", "912310012A");
+    static final PersonIdentification PERSONAL_DATA = new PersonIdentification("912310012A");
 
     @ParameterizedTest(name = "years of experience = {0}")
     @ValueSource(ints = {5, 6, 7, 10, 20})
@@ -182,13 +182,13 @@ class FacultyTest {
                 randomUUID(),
                 "Mathematics",
                 fieldsOfStudy,
-                Set.of(new ProfessorView(new PersonalData("John Doe", "1234"))),
+                Set.of(new ProfessorView(new PersonIdentification("1234"))),
                 new Vacancies(1),
                 config
         );
         int yearsOfExperience = 10;
         var candidate = new Candidate(yearsOfExperience, fieldsOfStudy,
-                                      new PersonalData("Carol Smith", "9120"));
+                                      new PersonIdentification("9120"));
 
         var result = faculty.employ(candidate);
 

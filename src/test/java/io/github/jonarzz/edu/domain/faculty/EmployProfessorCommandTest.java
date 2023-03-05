@@ -14,7 +14,7 @@ import io.github.jonarzz.edu.domain.professor.*;
 
 class EmployProfessorCommandTest {
 
-    static final PersonalData PERSONAL_DATA = new PersonalData("Caroline Smith", "124912A04B");
+    static final PersonIdentification PERSONAL_DATA = new PersonIdentification("124912A04B");
 
     DomainInjector injector = new FakeDomainInjector();
     FacultyRepository facultyRepository = injector.facultyRepository();
@@ -40,7 +40,7 @@ class EmployProfessorCommandTest {
                 .as(result.toString())
                 .isTrue();
         assertThat(professorRepository.getByFacultyId(facultyId))
-                .filteredOn(ProfessorView::personalData, PERSONAL_DATA)
+                .filteredOn(ProfessorView::personIdentification, PERSONAL_DATA)
                 .as("New professor")
                 .hasSize(1);
     }

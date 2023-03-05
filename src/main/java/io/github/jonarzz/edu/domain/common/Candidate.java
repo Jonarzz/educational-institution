@@ -6,7 +6,7 @@ import lombok.*;
 public record Candidate(
         int yearsOfExperience,
         FieldsOfStudy fieldsOfStudy,
-        PersonalData personalData
+        PersonIdentification personIdentification
 ) {
 
 }

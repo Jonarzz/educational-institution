@@ -38,7 +38,7 @@ final class Faculty extends NewFaculty {
                 .<Result<ProfessorView>>flatMap(Optional::stream)
                 .findFirst()
                 .orElseGet(() -> {
-                    var newProfessor = new ProfessorView(candidate.personalData());
+                    var newProfessor = new ProfessorView(candidate.personIdentification());
                     employedProfessors.add(newProfessor);
                     return new Created<>(newProfessor);
                 });
@@ -145,11 +145,11 @@ final class Faculty extends NewFaculty {
         }
 
         private boolean alreadyEmployed(Candidate candidate) {
-            var candidateNationalId = candidate.personalData()
+            var candidateNationalId = candidate.personIdentification()
                                                .nationalIdNumber();
             return employedProfessors.stream()
-                                     .map(ProfessorView::personalData)
-                                     .map(PersonalData::nationalIdNumber)
+                                     .map(ProfessorView::personIdentification)
+                                     .map(PersonIdentification::nationalIdNumber)
                                      .anyMatch(candidateNationalId::equals);
         }
     }

@@ -6,10 +6,10 @@ import io.github.jonarzz.edu.domain.common.*;
 
 public record ProfessorView(
         UUID id,
-        PersonalData personalData
+        PersonIdentification personIdentification
 ) {
 
-    public ProfessorView(PersonalData personalData) {
-        this(null, personalData);
+    public ProfessorView(PersonIdentification personIdentification) {
+        this(null, personIdentification);
     }
 }
