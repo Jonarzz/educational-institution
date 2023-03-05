@@ -227,10 +227,12 @@ class FacultyTest {
     }
 
     private static FieldsOfStudy fieldsOfStudyFrom(String csv) {
+        var fieldsList = Arrays.stream(csv.split(","))
+                               .map(String::trim)
+                               .collect(toList());
         return FieldsOfStudy.from(
-                Arrays.stream(csv.split(","))
-                      .map(String::trim)
-                      .collect(toList())
+                fieldsList.get(0),
+                fieldsList.subList(1, fieldsList.size())
         );
     }
 

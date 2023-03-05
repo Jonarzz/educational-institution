@@ -8,6 +8,7 @@ import lombok.experimental.*;
 import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
 
 import java.util.*;
+import java.util.function.*;
 import java.util.stream.*;
 
 @ValueObject
@@ -15,42 +16,47 @@ import java.util.stream.*;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class FieldsOfStudy {
 
-    Set<String> names;
+    String main;
+    Set<String> secondary;
 
-    private FieldsOfStudy(Collection<String> names) {
-        this.names = Set.copyOf(names);
+    private FieldsOfStudy(String main, Collection<String> secondary) {
+        this.main = main;
+        this.secondary = Set.copyOf(secondary);
     }
 
-    public static FieldsOfStudy from(String firstName, String... otherNames) {
-        return from(Stream.concat(Stream.of(firstName),
-                                  Arrays.stream(otherNames))
-                          .map(String::toLowerCase)
-                          .collect(toUnmodifiableSet()));
+    public static FieldsOfStudy from(String main, String... secondary) {
+        return from(main, Set.of(secondary));
     }
 
-    public static FieldsOfStudy from(Collection<String> names) {
-        if (names.isEmpty()) {
-            throw new IllegalArgumentException("At least one field of study required");
+    public static FieldsOfStudy from(String main, Collection<String> secondary) {
+        if (main == null || main.isEmpty()) {
+            throw new IllegalArgumentException("Main field of study cannot be empty");
         }
-        return new FieldsOfStudy(names);
-    }
-
-    public FieldsOfStudy matching(FieldsOfStudy other) {
-        return new FieldsOfStudy(
-                other.names.stream()
-                           .filter(names::contains)
-                           .collect(toSet())
-        );
+        return new FieldsOfStudy(main, secondary);
     }
 
     public int count() {
-        return names.size();
+        return 1 + secondary.size();
+    }
+
+    public int countMatching(FieldsOfStudy other) {
+        Predicate<String> matchesMain = other.main::equals;
+        Predicate<String> matchesSecondary = other.secondary::contains;
+        return (int) Stream.concat(Stream.of(main),
+                                   secondary.stream())
+                           .filter(matchesMain.or(matchesSecondary))
+                           .count();
     }
 
     @Override
     public String toString() {
-        return names.stream()
-                    .sorted()
-                    .collect(joining(", "));
+        var delimiter = ", ";
+        var secondaryString = secondary.stream()
+                                       .sorted()
+                                       .collect(joining(delimiter));
+        if (secondaryString.isEmpty()) {
+            return main;
+        }
+        return main + delimiter + secondaryString;
     }
 }

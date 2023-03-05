@@ -94,8 +94,7 @@ final class Faculty extends NewFaculty {
         @Override
         public Optional<RuleViolated<ProfessorView>> validate(Candidate candidate) {
             var candidateFieldsOfStudy = candidate.fieldsOfStudy();
-            var matchingFieldsOfStudy = fieldsOfStudy.matching(candidateFieldsOfStudy);
-            var matchingCount = matchingFieldsOfStudy.count();
+            var matchingCount = fieldsOfStudy.countMatching(candidateFieldsOfStudy);
             if (minimumRequiredMatch(matchingCount)) {
                 return Optional.empty();
             }
