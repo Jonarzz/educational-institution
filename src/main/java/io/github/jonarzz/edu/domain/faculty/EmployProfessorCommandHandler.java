@@ -4,11 +4,13 @@ import static lombok.AccessLevel.*;
 
 import lombok.*;
 import lombok.experimental.*;
+import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
 
 import io.github.jonarzz.edu.api.*;
-import io.github.jonarzz.edu.domain.common.result.*;
+import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.professor.*;
 
+@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 class EmployProfessorCommandHandler implements CommandHandler<EmployProfessorCommand, ProfessorView> {

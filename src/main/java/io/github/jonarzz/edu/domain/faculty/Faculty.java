@@ -10,8 +10,8 @@ import java.util.*;
 import java.util.stream.*;
 
 import io.github.jonarzz.edu.api.*;
+import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
-import io.github.jonarzz.edu.domain.common.result.*;
 import io.github.jonarzz.edu.domain.professor.*;
 
 @AggregateRoot

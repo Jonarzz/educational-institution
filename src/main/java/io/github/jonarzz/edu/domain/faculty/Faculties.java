@@ -9,8 +9,8 @@ import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
 import java.util.*;
 
 import io.github.jonarzz.edu.api.*;
+import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
-import io.github.jonarzz.edu.domain.common.result.*;
 
 @AggregateRoot
 @RequiredArgsConstructor

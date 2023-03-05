@@ -1,8 +1,9 @@
 package io.github.jonarzz.edu.domain.common;
+// TODO split into appropriate packages when the boundaries are clearer
 
-import lombok.*;
+import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
 
-@Builder
+@ValueObject
 public record Candidate(
         int yearsOfExperience,
         FieldsOfStudy fieldsOfStudy,

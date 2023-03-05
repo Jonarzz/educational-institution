@@ -1,5 +1,8 @@
 package io.github.jonarzz.edu.domain.common;
 
+import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
+
+@ValueObject
 public record Vacancies(
         int count
 ) {

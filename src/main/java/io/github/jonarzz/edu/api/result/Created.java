@@ -1,4 +1,4 @@
-package io.github.jonarzz.edu.domain.common.result;
+package io.github.jonarzz.edu.api.result;
 
 import java.util.*;
 
