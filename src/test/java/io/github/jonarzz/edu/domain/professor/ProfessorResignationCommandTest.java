@@ -6,7 +6,6 @@ import org.junit.jupiter.api.*;
 
 import java.util.*;
 
-import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.domain.*;
 import io.github.jonarzz.edu.domain.common.*;
 
@@ -14,7 +13,6 @@ class ProfessorResignationCommandTest {
 
     DomainInjector injector = new FakeDomainInjector();
     ProfessorRepository professorRepository = injector.professorRepository();
-    SyncCommandDispatcher dispatcher = new SyncCommandDispatcher(injector);
 
     @Test
     void successfullyHandleProfessorResignationCommand() {
@@ -26,7 +24,8 @@ class ProfessorResignationCommandTest {
                 professorId, new PersonIdentification("2515A551B")
         ));
 
-        var result = dispatcher.handle(command);
+        var result = command.getHandler(injector)
+                            .handle(command);
 
         assertThat(result.isOk())
                 .as(result.toString())
@@ -49,7 +48,8 @@ class ProfessorResignationCommandTest {
         );
         professorRepository.create(facultyId, professorBeforeHandling);
 
-        var result = dispatcher.handle(command);
+        var result = command.getHandler(injector)
+                            .handle(command);
 
         assertThat(result.isOk())
                 .as(result.toString())

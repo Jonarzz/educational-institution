@@ -6,7 +6,6 @@ import org.junit.jupiter.api.*;
 
 import java.util.*;
 
-import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.domain.*;
 import io.github.jonarzz.edu.domain.common.*;
 
@@ -14,7 +13,6 @@ class CreateFacultyCommandTest {
 
     DomainInjector injector = new FakeDomainInjector();
     FacultyRepository facultyRepository = injector.facultyRepository();
-    SyncCommandDispatcher dispatcher = new SyncCommandDispatcher(injector);
 
     @Test
     void successfullyHandleFacultyCreationCommand() {
@@ -27,7 +25,8 @@ class CreateFacultyCommandTest {
                 institutionId, "existing faculty", fieldsOfStudy, Set.of(), maxProfessorVacancies
         ));
 
-        var result = dispatcher.handle(command);
+        var result = command.getHandler(injector)
+                            .handle(command);
 
         assertThat(result.isOk())
                 .as(result.toString())
@@ -50,7 +49,8 @@ class CreateFacultyCommandTest {
                 institutionId, facultyName, fieldsOfStudy, Set.of(), maxProfessorVacancies
         ));
 
-        var result = dispatcher.handle(command);
+        var result = command.getHandler(injector)
+                            .handle(command);
 
         assertThat(result.isOk())
                 .as(result.toString())

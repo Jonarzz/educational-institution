@@ -11,8 +11,13 @@ public class SyncCommandDispatcher {
 
     DomainInjector injector;
 
-    public Result<Object> handle(Command command) {
-        return command.getHandler(injector)
-                      .handle(command);
+    // TODO implement and inject
+    EventEmitter eventEmitter = new EventEmitter();
+
+    public void handle(Command command) {
+        var result = command.getHandler(injector)
+                            .handle(command);
+        result.toEvent()
+              .ifPresent(eventEmitter::emit);
     }
 }

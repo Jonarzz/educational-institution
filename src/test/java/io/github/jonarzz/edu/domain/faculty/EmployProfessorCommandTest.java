@@ -19,7 +19,6 @@ class EmployProfessorCommandTest {
     DomainInjector injector = new FakeDomainInjector();
     FacultyRepository facultyRepository = injector.facultyRepository();
     ProfessorRepository professorRepository = injector.professorRepository();
-    SyncCommandDispatcher dispatcher = new SyncCommandDispatcher(injector);
 
     @Test
     void successfullyHandleProfessorEmploymentCommand() {
@@ -34,7 +33,8 @@ class EmployProfessorCommandTest {
                 facultyId, facultyName, fieldsOfStudy, Set.of(), new Vacancies(1)
         ));
 
-        var result = dispatcher.handle(command);
+        var result = command.getHandler(injector)
+                            .handle(command);
 
         assertThat(result.isOk())
                 .as(result.toString())
@@ -59,7 +59,8 @@ class EmployProfessorCommandTest {
                 facultyId, facultyName, fieldsOfStudy, Set.of(), new Vacancies(1)
         ));
 
-        var result = dispatcher.handle(command);
+        var result = command.getHandler(injector)
+                            .handle(command);
 
         assertThat(result.isOk())
                 .as(result.toString())
@@ -83,7 +84,8 @@ class EmployProfessorCommandTest {
                 facultyId, "Physics", fieldsOfStudy, Set.of(), new Vacancies(1)
         ));
 
-        var result = dispatcher.handle(command);
+        var result = command.getHandler(injector)
+                            .handle(command);
 
         assertThat(result)
                 .as(result.toString())
