@@ -1,7 +1,5 @@
 package io.github.jonarzz.edu.domain.professor;
 
-import static lombok.AccessLevel.*;
-
 import lombok.*;
 import lombok.experimental.*;
 import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
@@ -14,7 +12,7 @@ import io.github.jonarzz.edu.domain.common.*;
 
 @AggregateRoot
 @RequiredArgsConstructor
-@FieldDefaults(level = PRIVATE, makeFinal = true)
+@FieldDefaults(makeFinal = true)
 class Professor {
 
     UUID id;

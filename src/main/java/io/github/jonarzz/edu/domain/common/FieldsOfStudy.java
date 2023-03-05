@@ -1,7 +1,6 @@
 package io.github.jonarzz.edu.domain.common;
 
 import static java.util.stream.Collectors.*;
-import static lombok.AccessLevel.*;
 
 import lombok.*;
 import lombok.experimental.*;
@@ -13,7 +12,7 @@ import java.util.stream.*;
 
 @ValueObject
 @EqualsAndHashCode
-@FieldDefaults(level = PRIVATE, makeFinal = true)
+@FieldDefaults(makeFinal = true)
 public class FieldsOfStudy {
 
     String main;

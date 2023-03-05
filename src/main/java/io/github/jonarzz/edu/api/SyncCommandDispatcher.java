@@ -1,14 +1,12 @@
 package io.github.jonarzz.edu.api;
 
-import static lombok.AccessLevel.*;
-
 import lombok.*;
 import lombok.experimental.*;
 
 import io.github.jonarzz.edu.domain.*;
 
 @RequiredArgsConstructor
-@FieldDefaults(level = PRIVATE, makeFinal = true)
+@FieldDefaults(makeFinal = true)
 public class SyncCommandDispatcher {
 
     DomainInjector injector;

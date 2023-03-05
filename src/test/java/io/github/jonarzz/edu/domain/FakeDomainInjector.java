@@ -1,13 +1,11 @@
 package io.github.jonarzz.edu.domain;
 
-import static lombok.AccessLevel.*;
-
 import lombok.experimental.*;
 
 import io.github.jonarzz.edu.domain.faculty.*;
 import io.github.jonarzz.edu.domain.professor.*;
 
-@FieldDefaults(level = PRIVATE, makeFinal = true)
+@FieldDefaults(makeFinal = true)
 public class FakeDomainInjector implements DomainInjector {
 
     FacultyConfiguration facultyConfiguration = new FakeFacultyConfiguration();

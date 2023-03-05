@@ -1,7 +1,5 @@
 package io.github.jonarzz.edu.domain.faculty;
 
-import static lombok.AccessLevel.*;
-
 import lombok.*;
 import lombok.experimental.*;
 import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
@@ -15,7 +13,7 @@ import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.professor.*;
 
 @AggregateRoot
-@FieldDefaults(level = PRIVATE, makeFinal = true)
+@FieldDefaults(makeFinal = true)
 final class Faculty extends NewFaculty {
 
     UUID id;
@@ -86,7 +84,7 @@ final class Faculty extends NewFaculty {
     }
 
     @RequiredArgsConstructor
-    @FieldDefaults(level = PRIVATE, makeFinal = true)
+    @FieldDefaults(makeFinal = true)
     private class FieldsOfStudyRule implements ProfessorEmploymentRule {
 
         FacultyConfiguration config;

@@ -1,13 +1,11 @@
 package io.github.jonarzz.edu.domain.professor;
 
-import static lombok.AccessLevel.*;
-
 import lombok.*;
 import lombok.experimental.*;
 
 import java.util.*;
 
-@FieldDefaults(level = PRIVATE, makeFinal = true)
+@FieldDefaults(makeFinal = true)
 public class FakeProfessorResignationListener implements ProfessorResignationListener {
 
     @Getter

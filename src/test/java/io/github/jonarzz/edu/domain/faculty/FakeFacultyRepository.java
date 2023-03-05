@@ -1,12 +1,10 @@
 package io.github.jonarzz.edu.domain.faculty;
 
-import static lombok.AccessLevel.*;
-
 import lombok.experimental.*;
 
 import java.util.*;
 
-@FieldDefaults(level = PRIVATE, makeFinal = true)
+@FieldDefaults(makeFinal = true)
 public class FakeFacultyRepository implements FacultyRepository {
 
     Map<UUID, Collection<FacultyView>> facultiesByInstitutionId = new HashMap<>();

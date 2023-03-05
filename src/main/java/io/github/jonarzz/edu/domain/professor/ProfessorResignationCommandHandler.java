@@ -1,7 +1,5 @@
 package io.github.jonarzz.edu.domain.professor;
 
-import static lombok.AccessLevel.*;
-
 import lombok.*;
 import lombok.experimental.*;
 import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
@@ -10,7 +8,7 @@ import io.github.jonarzz.edu.api.*;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = PRIVATE, makeFinal = true)
+@FieldDefaults(makeFinal = true)
 class ProfessorResignationCommandHandler implements CommandHandler<ProfessorResignationCommand, ProfessorView> {
 
     ProfessorRepository professorRepository;
