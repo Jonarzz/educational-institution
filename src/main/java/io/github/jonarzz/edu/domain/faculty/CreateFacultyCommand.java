@@ -10,7 +10,8 @@ public record CreateFacultyCommand(
         UUID educationalInstitutionId,
         String name,
         FieldsOfStudy fieldsOfStudy,
-        Vacancies maxProfessorVacancies
+        Vacancies maxProfessorVacancies,
+        Vacancies maxStudentVacancies
 ) implements Command {
 
     @Override

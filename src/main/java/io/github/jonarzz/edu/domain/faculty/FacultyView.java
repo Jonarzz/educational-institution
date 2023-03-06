@@ -6,6 +6,7 @@ import java.util.*;
 
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.professor.*;
+import io.github.jonarzz.edu.domain.student.*;
 
 @ValueObject
 public record FacultyView(
@@ -13,7 +14,9 @@ public record FacultyView(
         String name,
         FieldsOfStudy fieldsOfStudy,
         Collection<ProfessorView> employedProfessors,
-        Vacancies maxProfessorVacancies
+        Vacancies maxProfessorVacancies,
+        Collection<StudentView> enrolledStudents,
+        Vacancies maxStudentVacancies
 ) {
 
     Faculty toDomainObject(FacultyConfiguration config) {
@@ -23,6 +26,8 @@ public record FacultyView(
                 fieldsOfStudy,
                 employedProfessors,
                 maxProfessorVacancies,
+                enrolledStudents,
+                maxStudentVacancies,
                 config
         );
     }

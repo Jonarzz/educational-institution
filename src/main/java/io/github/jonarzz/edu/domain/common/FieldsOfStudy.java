@@ -1,4 +1,5 @@
 package io.github.jonarzz.edu.domain.common;
+// TODO split into appropriate packages when the boundaries are clearer
 
 import static java.util.stream.Collectors.*;
 
@@ -15,6 +16,7 @@ import java.util.stream.*;
 @FieldDefaults(makeFinal = true)
 public class FieldsOfStudy {
 
+    @Getter
     String main;
     Set<String> secondary;
 
@@ -45,6 +47,10 @@ public class FieldsOfStudy {
                                    secondary.stream())
                            .filter(matchesMain.or(matchesSecondary))
                            .count();
+    }
+
+    public Collection<String> secondary() {
+        return Set.copyOf(secondary);
     }
 
     @Override

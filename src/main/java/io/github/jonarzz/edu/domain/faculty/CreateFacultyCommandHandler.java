@@ -20,7 +20,8 @@ class CreateFacultyCommandHandler implements CommandHandler<CreateFacultyCommand
         var faculties = Faculties.fromView(facultiesView);
         var result = faculties.createFaculty(command.name(),
                                              command.fieldsOfStudy(),
-                                             command.maxProfessorVacancies());
+                                             command.maxProfessorVacancies(),
+                                             command.maxStudentVacancies());
         if (result.isOk()) {
             facultyRepository.create(institutionId, result.getSubject());
         }

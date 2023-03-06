@@ -26,11 +26,11 @@ class EmployProfessorCommandTest {
         var facultyId = UUID.randomUUID();
         var facultyName = "Mathematics";
         var fieldsOfStudy = FieldsOfStudy.from("math");
-        var command = new EmployProfessorCommand(institutionId, facultyName, new Candidate(
+        var command = new EmployProfessorCommand(institutionId, facultyName, new CandidateForProfessor(
                 DEFAULT_MIN_PROF_YEARS_OF_EXPERIENCE, fieldsOfStudy, PERSONAL_DATA
         ));
         facultyRepository.create(institutionId, new FacultyView(
-                facultyId, facultyName, fieldsOfStudy, Set.of(), new Vacancies(1)
+                facultyId, facultyName, fieldsOfStudy, Set.of(), new Vacancies(1), Set.of(), new Vacancies(10)
         ));
 
         var result = command.getHandler(injector)
@@ -52,11 +52,11 @@ class EmployProfessorCommandTest {
         var facultyName = "Mathematics";
         var fieldsOfStudy = FieldsOfStudy.from("math");
         var yearsOfExperience = DEFAULT_MIN_PROF_YEARS_OF_EXPERIENCE / 2;
-        var command = new EmployProfessorCommand(institutionId, facultyName, new Candidate(
+        var command = new EmployProfessorCommand(institutionId, facultyName, new CandidateForProfessor(
                 yearsOfExperience, fieldsOfStudy, PERSONAL_DATA
         ));
         facultyRepository.create(institutionId, new FacultyView(
-                facultyId, facultyName, fieldsOfStudy, Set.of(), new Vacancies(1)
+                facultyId, facultyName, fieldsOfStudy, Set.of(), new Vacancies(1), Set.of(), new Vacancies(10)
         ));
 
         var result = command.getHandler(injector)
@@ -77,11 +77,11 @@ class EmployProfessorCommandTest {
         var facultyName = "Mathematics";
         var fieldsOfStudy = FieldsOfStudy.from("math");
         var yearsOfExperience = DEFAULT_MIN_PROF_YEARS_OF_EXPERIENCE / 2;
-        var command = new EmployProfessorCommand(institutionId, facultyName, new Candidate(
+        var command = new EmployProfessorCommand(institutionId, facultyName, new CandidateForProfessor(
                 yearsOfExperience, fieldsOfStudy, PERSONAL_DATA
         ));
         facultyRepository.create(institutionId, new FacultyView(
-                facultyId, "Physics", fieldsOfStudy, Set.of(), new Vacancies(1)
+                facultyId, "Physics", fieldsOfStudy, Set.of(), new Vacancies(1), Set.of(), new Vacancies(10)
         ));
 
         var result = command.getHandler(injector)

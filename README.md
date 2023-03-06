@@ -30,7 +30,7 @@ A notification to an external system has to be sent upon that event.
 
 ### Student
 Students may be **enrolled** if specific rules are met:
-- number of students within the faculty is less than N
+- there is a vacancy in the faculty
 - student scored at least N% of points in tests for the **main fields of study**
 - student scored at least M% of points in tests for the **secondary fields of study**
 

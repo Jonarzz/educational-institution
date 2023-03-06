@@ -18,6 +18,7 @@ sealed class NewFaculty permits Faculty {
     String name;
     FieldsOfStudy fieldsOfStudy;
     Vacancies maxProfessorVacancies;
+    Vacancies maxStudentVacancies;
 
     FacultyView toView() {
         return new FacultyView(
@@ -25,7 +26,9 @@ sealed class NewFaculty permits Faculty {
                 name,
                 fieldsOfStudy,
                 Set.of(),
-                maxProfessorVacancies
+                maxProfessorVacancies,
+                Set.of(),
+                maxStudentVacancies
         );
     }
 }

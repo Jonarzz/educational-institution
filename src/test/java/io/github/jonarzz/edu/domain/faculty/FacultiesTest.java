@@ -9,6 +9,7 @@ import java.util.*;
 import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.professor.*;
+import io.github.jonarzz.edu.domain.student.*;
 
 class FacultiesTest {
 
@@ -18,8 +19,10 @@ class FacultiesTest {
         var facultyName = "Mathematics";
         var fieldsOfStudy = FieldsOfStudy.from("math");
         var maxProfessorVacancies = new Vacancies(1);
+        var maxStudentVacancies = new Vacancies(15);
 
-        var result = faculties.createFaculty(facultyName, fieldsOfStudy, maxProfessorVacancies);
+        var result = faculties.createFaculty(facultyName, fieldsOfStudy,
+                                             maxProfessorVacancies, maxStudentVacancies);
 
         assertThat(result)
                 .as(result.toString())
@@ -33,19 +36,24 @@ class FacultiesTest {
     void tryToCreateFacultyThatAlreadyExists() {
         var facultyName = "Mathematics";
         var fieldsOfStudy = FieldsOfStudy.from("math");
-        var maxProfessorVacancies = new Vacancies(1);
         var employedProfessors = Set.<ProfessorView>of();
+        var maxProfessorVacancies = new Vacancies(1);
+        var maxStudentVacancies = new Vacancies(15);
+        var enrolledStudents = Set.<StudentView>of();
         var faculties = new Faculties(Set.of(
                 new FacultyView(
                         UUID.randomUUID(),
                         facultyName,
                         fieldsOfStudy,
                         employedProfessors,
-                        maxProfessorVacancies
+                        maxProfessorVacancies,
+                        enrolledStudents,
+                        maxStudentVacancies
                 )
         ));
 
-        var result = faculties.createFaculty(facultyName, fieldsOfStudy, maxProfessorVacancies);
+        var result = faculties.createFaculty(facultyName, fieldsOfStudy,
+                                             maxProfessorVacancies, maxStudentVacancies);
 
         assertThat(result)
                 .as(result.toString())

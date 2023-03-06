@@ -1,5 +1,7 @@
 package io.github.jonarzz.edu.domain.faculty;
 
+import static java.util.stream.Collectors.*;
+
 import lombok.*;
 import lombok.experimental.*;
 import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
@@ -11,26 +13,31 @@ import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.professor.*;
+import io.github.jonarzz.edu.domain.student.*;
 
 @AggregateRoot
 @FieldDefaults(makeFinal = true)
 final class Faculty extends NewFaculty {
 
     UUID id;
+    // TODO split into 2 separate aggregates (employment + enrollment)
     Collection<ProfessorView> employedProfessors;
+    Collection<StudentView> enrolledStudents;
 
     FacultyConfiguration config;
 
     Faculty(UUID id, String name, FieldsOfStudy fieldsOfStudy,
             Collection<ProfessorView> employedProfessors, Vacancies maxProfessorVacancies,
+            Collection<StudentView> enrolledStudents, Vacancies maxStudentVacancies,
             FacultyConfiguration config) {
-        super(name, fieldsOfStudy, maxProfessorVacancies);
+        super(name, fieldsOfStudy, maxProfessorVacancies, maxStudentVacancies);
         this.id = id;
         this.employedProfessors = new HashSet<>(employedProfessors);
+        this.enrolledStudents = new HashSet<>(enrolledStudents);
         this.config = config;
     }
 
-    Result<ProfessorView> employ(Candidate candidate) {
+    Result<ProfessorView> employ(CandidateForProfessor candidate) {
         return professorEmploymentRules()
                 .map(rule -> rule.validate(candidate))
                 .<Result<ProfessorView>>flatMap(Optional::stream)
@@ -42,12 +49,34 @@ final class Faculty extends NewFaculty {
                 });
     }
 
+    // TODO command + handler
+    Result<StudentView> enroll(CandidateForStudent candidate) {
+        return studentEnrollmentRules()
+                .map(rule -> rule.validate(candidate))
+                .<Result<StudentView>>flatMap(Optional::stream)
+                .findFirst()
+                .orElseGet(() -> {
+                    var newStudent = new StudentView(candidate.personIdentification());
+                    enrolledStudents.add(newStudent);
+                    return new Created<>(newStudent);
+                });
+    }
+
     private Stream<ProfessorEmploymentRule> professorEmploymentRules() {
         return Stream.of(
+                new DuplicatePreventingRule(),
+                new VacancyRule(employedProfessors, maxProfessorVacancies),
                 new YearsOfExperienceRule(config),
-                new FieldsOfStudyRule(config),
-                new VacancyRule(),
-                new NoDuplicatedEmploymentRule()
+                new FieldsOfStudyRule(config)
+        );
+    }
+
+    private Stream<StudentEnrollmentRule> studentEnrollmentRules() {
+        return Stream.of(
+                new DuplicatePreventingRule(),
+                new VacancyRule(enrolledStudents, maxStudentVacancies),
+                new MainFieldOfStudyScoreRule(),
+                new SecondaryFieldOfStudyScoreRule()
         );
     }
 
@@ -58,21 +87,29 @@ final class Faculty extends NewFaculty {
                 name,
                 fieldsOfStudy,
                 employedProfessors,
-                maxProfessorVacancies
+                maxProfessorVacancies,
+                enrolledStudents,
+                maxStudentVacancies
         );
     }
 
     private interface ProfessorEmploymentRule {
 
-        Optional<RuleViolated<ProfessorView>> validate(Candidate candidate);
+        Optional<RuleViolated<ProfessorView>> validate(CandidateForProfessor candidate);
+    }
+
+    private interface StudentEnrollmentRule {
+
+        Optional<RuleViolated<StudentView>> validate(CandidateForStudent candidate);
     }
 
     private record YearsOfExperienceRule(FacultyConfiguration config) implements ProfessorEmploymentRule {
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> validate(Candidate candidate) {
+        public Optional<RuleViolated<ProfessorView>> validate(CandidateForProfessor candidate) {
             var candidateExperience = candidate.yearsOfExperience();
-            var minExperience = config.minimumProfessorYearsOfExperience();
+            var minExperience = config.professorCandidate()
+                                      .minimumYearsOfExperience();
             if (candidateExperience < minExperience) {
                 return Optional.of(
                         new RuleViolated<>("Candidate has %d years of experience, while minimum required is %d"
@@ -90,53 +127,86 @@ final class Faculty extends NewFaculty {
         FacultyConfiguration config;
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> validate(Candidate candidate) {
+        public Optional<RuleViolated<ProfessorView>> validate(CandidateForProfessor candidate) {
             var candidateFieldsOfStudy = candidate.fieldsOfStudy();
             var matchingCount = fieldsOfStudy.countMatching(candidateFieldsOfStudy);
-            if (minimumRequiredMatch(matchingCount)) {
+            if (matchingCount == fieldsOfStudy.count()) {
                 return Optional.empty();
             }
-            if (allMatch(matchingCount)) {
+            var minimumMatches = config.professorCandidate()
+                                       .minimumNumberOfMatchingFieldsOfStudy();
+            if (matchingCount >= minimumMatches) {
                 return Optional.empty();
             }
             return Optional.of(
                     new RuleViolated<>("Candidate fields of study (%s) match %d of %d required"
                                                .formatted(candidateFieldsOfStudy,
                                                           matchingCount,
-                                                          config.minimumNumberOfMatchingFieldsOfStudy()))
+                                                          minimumMatches))
             );
-        }
-
-        private boolean minimumRequiredMatch(int matchingCount) {
-            return matchingCount >= config.minimumNumberOfMatchingFieldsOfStudy();
-        }
-
-        private boolean allMatch(int matchingCount) {
-            return matchingCount == fieldsOfStudy.count();
         }
     }
 
-    private class VacancyRule implements ProfessorEmploymentRule {
+    private class MainFieldOfStudyScoreRule implements StudentEnrollmentRule {
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> validate(Candidate candidate) {
-            if (employedProfessors.size() == maxProfessorVacancies.count()) {
+        public Optional<RuleViolated<StudentView>> validate(CandidateForStudent candidate) {
+            var score = candidate.getScoreFor(fieldsOfStudy.main());
+            var minimumScore = config.studentCandidate()
+                                     .minimumMainFieldOfStudyScorePercentage();
+            if (score.isLowerThan(minimumScore)) {
                 return Optional.of(
-                        new RuleViolated<>("There is no vacancy")
+                        new RuleViolated<>("Student main faculty score %s is lower than minimum %s"
+                                                   .formatted(score.asPercentage(),
+                                                              minimumScore.asPercentage()))
                 );
             }
             return Optional.empty();
         }
     }
 
-    private class NoDuplicatedEmploymentRule implements ProfessorEmploymentRule {
+    private class SecondaryFieldOfStudyScoreRule implements StudentEnrollmentRule {
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> validate(Candidate candidate) {
+        public Optional<RuleViolated<StudentView>> validate(CandidateForStudent candidate) {
+            var minimumScore = config.studentCandidate()
+                                     .minimumSecondaryFieldOfStudyScorePercentage();
+            var fieldsOfStudyWithNotEnoughScore =
+                    fieldsOfStudy.secondary()
+                                 .stream()
+                                 .filter(field -> candidate.getScoreFor(field)
+                                                           .isLowerThan(minimumScore))
+                                 .sorted()
+                                 .collect(joining(", "));
+            if (fieldsOfStudyWithNotEnoughScore.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(
+                    new RuleViolated<>("Student secondary fields of study: %s have score lower than minimum %s"
+                                               .formatted(fieldsOfStudyWithNotEnoughScore,
+                                                          minimumScore.asPercentage()))
+            );
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private class DuplicatePreventingRule implements ProfessorEmploymentRule, StudentEnrollmentRule {
+
+        @Override
+        public Optional<RuleViolated<ProfessorView>> validate(CandidateForProfessor candidate) {
+            return doValidate(candidate, "The professor is already employed")
+                    .map(result -> (RuleViolated<ProfessorView>) result);
+        }
+
+        @Override
+        public Optional<RuleViolated<StudentView>> validate(CandidateForStudent candidate) {
+            return doValidate(candidate, "The student is already enrolled")
+                    .map(result -> (RuleViolated<StudentView>) result);
+        }
+
+        private Optional<RuleViolated<?>> doValidate(Candidate candidate, String errorMessage) {
             if (alreadyEmployed(candidate)) {
-                return Optional.of(
-                        new RuleViolated<>("The professor is already employed")
-                );
+                return Optional.of(new RuleViolated<>(errorMessage));
             }
             return Optional.empty();
         }
@@ -148,6 +218,34 @@ final class Faculty extends NewFaculty {
                                      .map(ProfessorView::personIdentification)
                                      .map(PersonIdentification::nationalIdNumber)
                                      .anyMatch(candidateNationalId::equals);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private record VacancyRule(
+            Collection<?> facultyPersons,
+            Vacancies maxVacancies
+    ) implements ProfessorEmploymentRule, StudentEnrollmentRule {
+
+        @Override
+        public Optional<RuleViolated<ProfessorView>> validate(CandidateForProfessor candidate) {
+            return validate()
+                    .map(result -> (RuleViolated<ProfessorView>) result);
+        }
+
+        @Override
+        public Optional<RuleViolated<StudentView>> validate(CandidateForStudent candidate) {
+            return validate()
+                    .map(result -> (RuleViolated<StudentView>) result);
+        }
+
+        private Optional<RuleViolated<?>> validate() {
+            if (facultyPersons.size() == maxVacancies.count()) {
+                return Optional.of(
+                        new RuleViolated<>("There is no vacancy")
+                );
+            }
+            return Optional.empty();
         }
     }
 }

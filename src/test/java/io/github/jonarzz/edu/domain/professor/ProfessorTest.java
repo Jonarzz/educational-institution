@@ -8,7 +8,7 @@ import java.util.*;
 
 import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.domain.common.*;
-import io.github.jonarzz.edu.domain.professor.FakeProfessorResignationListener.*;
+import io.github.jonarzz.edu.domain.professor.FakeProfessorResignationListener.Event;
 
 class ProfessorTest {
 
@@ -33,7 +33,7 @@ class ProfessorTest {
                 .returns(professorId, ProfessorView::id)
                 .returns(professorPersonalId, ProfessorView::personIdentification)
                 .returns(false, ProfessorView::active)
-                .satisfies(subject -> assertThat(resignationListener.getEvents())
+                .satisfies(subject -> assertThat(resignationListener.events())
                         .singleElement()
                         .returns(subject, Event::professor)
                         .returns(resignationReason, Event::reason));
@@ -51,7 +51,7 @@ class ProfessorTest {
                 .returns(false, Result::isOk)
                 .returns("Not active professor cannot resign", Result::getMessage)
                 .returns(null, Result::getSubject);
-        assertThat(resignationListener.getEvents())
+        assertThat(resignationListener.events())
                 .isEmpty();
     }
 }

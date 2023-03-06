@@ -20,9 +20,11 @@ class CreateFacultyCommandTest {
         var newFacultyName = "faculty name";
         var fieldsOfStudy = FieldsOfStudy.from("test field of study");
         var maxProfessorVacancies = new Vacancies(1);
-        var command = new CreateFacultyCommand(institutionId, newFacultyName, fieldsOfStudy, maxProfessorVacancies);
+        var maxStudentVacancies = new Vacancies(30);
+        var command = new CreateFacultyCommand(institutionId, newFacultyName, fieldsOfStudy,
+                                               maxProfessorVacancies, maxStudentVacancies);
         facultyRepository.create(institutionId, new FacultyView(
-                institutionId, "existing faculty", fieldsOfStudy, Set.of(), maxProfessorVacancies
+                institutionId, "existing faculty", fieldsOfStudy, Set.of(), maxProfessorVacancies, Set.of(), maxStudentVacancies
         ));
 
         var result = command.getHandler(injector)
@@ -44,9 +46,11 @@ class CreateFacultyCommandTest {
         var facultyName = "faculty name";
         var fieldsOfStudy = FieldsOfStudy.from("test field of study");
         var maxProfessorVacancies = new Vacancies(1);
-        var command = new CreateFacultyCommand(institutionId, facultyName, fieldsOfStudy, maxProfessorVacancies);
+        var maxStudentVacancies = new Vacancies(50);
+        var command = new CreateFacultyCommand(institutionId, facultyName, fieldsOfStudy,
+                                               maxProfessorVacancies, maxStudentVacancies);
         facultyRepository.create(institutionId, new FacultyView(
-                institutionId, facultyName, fieldsOfStudy, Set.of(), maxProfessorVacancies
+                institutionId, facultyName, fieldsOfStudy, Set.of(), maxProfessorVacancies, Set.of(), maxStudentVacancies
         ));
 
         var result = command.getHandler(injector)

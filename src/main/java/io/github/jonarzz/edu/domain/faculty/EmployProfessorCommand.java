@@ -4,12 +4,11 @@ import java.util.*;
 
 import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.domain.*;
-import io.github.jonarzz.edu.domain.common.*;
 
 public record EmployProfessorCommand(
         UUID educationalInstitutionId,
         String facultyName,
-        Candidate candidate
+        CandidateForProfessor candidate
 ) implements Command {
 
     @Override
