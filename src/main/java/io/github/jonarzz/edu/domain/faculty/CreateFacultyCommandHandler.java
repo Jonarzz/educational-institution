@@ -16,7 +16,7 @@ class CreateFacultyCommandHandler implements CommandHandler<CreateFacultyCommand
     @Override
     public Result<FacultyView> handle(CreateFacultyCommand command) {
         var institutionId = command.educationalInstitutionId();
-        var faculties = facultyRepository.getByEducationalInstitutionId(institutionId)
+        var faculties = facultyRepository.getAllEducationalInstitutionFaculties(institutionId)
                                          .toDomainObject();
         var result = faculties.createFaculty(command.name(),
                                              command.fieldsOfStudy(),

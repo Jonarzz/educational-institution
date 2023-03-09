@@ -7,7 +7,9 @@ import java.util.*;
 @Repository
 public interface FacultyRepository {
 
-    FacultiesView getByEducationalInstitutionId(UUID institutionId);
+    FacultiesView getAllEducationalInstitutionFaculties(UUID institutionId);
+
+    FacultyView getEducationalInstitutionFaculty(UUID institutionId, String facultyName);
 
     void create(UUID institutionId, FacultyView faculty);
 }

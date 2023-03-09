@@ -19,13 +19,32 @@ public record FacultyView(
         Vacancies maxStudentVacancies
 ) {
 
-    Faculty toDomainObject(FacultyConfiguration config) {
-        return new Faculty(
-                id,
+    static FacultyView newFaculty(
+            String name, FieldsOfStudy fieldsOfStudy,
+            Vacancies maxProfessorVacancies, Vacancies maxStudentVacancies) {
+        return new FacultyView(
+                null,
                 name,
+                fieldsOfStudy,
+                Set.of(),
+                maxProfessorVacancies,
+                Set.of(),
+                maxStudentVacancies
+        );
+    }
+
+    FacultyProfessors professorsDomainObject(FacultyConfiguration config) {
+        return new FacultyProfessors(
                 fieldsOfStudy,
                 employedProfessors,
                 maxProfessorVacancies,
+                config
+        );
+    }
+
+    FacultyStudents studentsDomainObject(FacultyConfiguration config) {
+        return new FacultyStudents(
+                fieldsOfStudy,
                 enrolledStudents,
                 maxStudentVacancies,
                 config

@@ -13,12 +13,12 @@
 The whole application is run per single educational institution. 
 Institution creation is not part of the domain, but part of the app configuration.
 
-### Faculty
+### Faculty :white_check_mark:
 Faculties may be **created** within the educational institution.
 Each faculty includes specific **fields of study** that the **candidates**
 for professors and students have to match.
 
-### Professor
+### Professor :white_check_mark:
 Professors may be **employed** if specific rules are met:
 - the faculty they apply for matches their **fields of study** - at least N fields of study have to match,
   or all if faculty has less than N fields of study
@@ -28,7 +28,7 @@ Professors may be **employed** if specific rules are met:
 Professors may **resign**.
 A notification to an external system has to be sent upon that event.
 
-### Student
+### Student :soon:
 Students may be **enrolled** if specific rules are met:
 - there is a vacancy in the faculty
 - student scored at least N% of points in tests for the **main fields of study**

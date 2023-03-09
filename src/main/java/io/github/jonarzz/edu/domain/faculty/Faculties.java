@@ -26,7 +26,11 @@ final class Faculties {
         if (facultyAlreadyExists) {
             return new AlreadyExists<>("faculty", "name", name);
         }
-        var faculty = new NewFaculty(name, fieldsOfStudy, maxProfessorVacancies, maxStudentVacancies);
-        return new Created<>(faculty.toView());
+        return new Created<>(FacultyView.newFaculty(
+                name,
+                fieldsOfStudy,
+                maxProfessorVacancies,
+                maxStudentVacancies
+        ));
     }
 }

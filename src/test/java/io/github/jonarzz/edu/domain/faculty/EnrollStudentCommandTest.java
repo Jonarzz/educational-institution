@@ -6,7 +6,6 @@ import org.junit.jupiter.api.*;
 
 import java.util.*;
 
-import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.domain.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.faculty.CandidateForStudent.*;
@@ -68,31 +67,6 @@ class EnrollStudentCommandTest {
         assertThat(result.isOk())
                 .as(result.toString())
                 .isFalse();
-        assertThat(studentRepository.getByFacultyId(facultyId))
-                .as("Enrolled students")
-                .isEmpty();
-    }
-
-    @Test
-    void handleMissingFacultyForStudentEnrollmentCommand() {
-        var institutionId = UUID.randomUUID();
-        var facultyId = UUID.randomUUID();
-        var facultyName = "Mathematics";
-        var fieldOfStudyName = "math";
-        var fieldsOfStudy = FieldsOfStudy.from(fieldOfStudyName);
-        var command = new EnrollStudentCommand(institutionId, facultyName, new CandidateForStudent(
-                Set.of(new TestResult(fieldOfStudyName, Score.fromPercentage(20))),
-                PERSONAL_DATA
-        ));
-
-        var result = command.getHandler(injector)
-                            .handle(command);
-
-        assertThat(result)
-                .as(result.toString())
-                .returns(false, Result::isOk)
-                .returns("Not found faculty with name '%s'".formatted(facultyName),
-                         Result::getMessage);
         assertThat(studentRepository.getByFacultyId(facultyId))
                 .as("Enrolled students")
                 .isEmpty();

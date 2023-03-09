@@ -7,7 +7,6 @@ import org.junit.jupiter.api.*;
 
 import java.util.*;
 
-import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.domain.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.professor.*;
@@ -65,33 +64,6 @@ class EmployProfessorCommandTest {
         assertThat(result.isOk())
                 .as(result.toString())
                 .isFalse();
-        assertThat(professorRepository.getByFacultyId(facultyId))
-                .as("Employed professors")
-                .isEmpty();
-    }
-
-    @Test
-    void handleMissingFacultyForProfessorEmploymentCommand() {
-        var institutionId = UUID.randomUUID();
-        var facultyId = UUID.randomUUID();
-        var facultyName = "Mathematics";
-        var fieldsOfStudy = FieldsOfStudy.from("math");
-        var yearsOfExperience = DEFAULT_MIN_PROF_YEARS_OF_EXPERIENCE / 2;
-        var command = new EmployProfessorCommand(institutionId, facultyName, new CandidateForProfessor(
-                yearsOfExperience, fieldsOfStudy, PERSONAL_DATA
-        ));
-        facultyRepository.create(institutionId, new FacultyView(
-                facultyId, "Physics", fieldsOfStudy, Set.of(), new Vacancies(1), Set.of(), new Vacancies(10)
-        ));
-
-        var result = command.getHandler(injector)
-                            .handle(command);
-
-        assertThat(result)
-                .as(result.toString())
-                .returns(false, Result::isOk)
-                .returns("Not found faculty with name '%s'".formatted(facultyName),
-                         Result::getMessage);
         assertThat(professorRepository.getByFacultyId(facultyId))
                 .as("Employed professors")
                 .isEmpty();

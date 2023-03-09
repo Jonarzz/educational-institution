@@ -33,7 +33,7 @@ class CreateFacultyCommandTest {
         assertThat(result.isOk())
                 .as(result.toString())
                 .isTrue();
-        assertThat(facultyRepository.getByEducationalInstitutionId(institutionId)
+        assertThat(facultyRepository.getAllEducationalInstitutionFaculties(institutionId)
                                     .faculties())
                 .filteredOn(FacultyView::name, newFacultyName)
                 .as("New faculty")
@@ -59,7 +59,7 @@ class CreateFacultyCommandTest {
         assertThat(result.isOk())
                 .as(result.toString())
                 .isFalse();
-        assertThat(facultyRepository.getByEducationalInstitutionId(institutionId)
+        assertThat(facultyRepository.getAllEducationalInstitutionFaculties(institutionId)
                                     .faculties())
                 .as("All faculties")
                 .hasSize(1);
