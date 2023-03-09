@@ -28,7 +28,7 @@ Professors may be **employed** if specific rules are met:
 Professors may **resign**.
 A notification to an external system has to be sent upon that event.
 
-### Student :soon:
+### Student :white_check_mark:
 Students may be **enrolled** if specific rules are met:
 - there is a vacancy in the faculty
 - student scored at least N% of points in tests for the **main fields of study**
@@ -37,7 +37,7 @@ Students may be **enrolled** if specific rules are met:
 Students may **resign**.
 A notification to an external system has to be sent upon that event.
 
-### Course
+### Course :soon:
 A course is part of the faculty. Each course can include from N to M **fields of study**.
 
 Professors may **create** courses within a faculty if specific rules are met:
