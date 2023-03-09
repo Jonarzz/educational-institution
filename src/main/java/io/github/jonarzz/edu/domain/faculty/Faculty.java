@@ -49,7 +49,6 @@ final class Faculty extends NewFaculty {
                 });
     }
 
-    // TODO command + handler
     Result<StudentView> enroll(CandidateForStudent candidate) {
         return studentEnrollmentRules()
                 .map(rule -> rule.validate(candidate))

@@ -9,4 +9,9 @@ public record PersonIdentification(
         String nationalIdNumber
 ) {
 
+    public PersonIdentification {
+        if (nationalIdNumber == null || nationalIdNumber.isEmpty()) {
+            throw new IllegalArgumentException("National ID number cannot be empty");
+        }
+    }
 }

@@ -9,7 +9,7 @@ import io.github.jonarzz.edu.domain.professor.*;
 import io.github.jonarzz.edu.domain.student.*;
 
 @ValueObject
-public record FacultyView(
+public record FacultyView( // TODO move to interface?
         UUID id,
         String name,
         FieldsOfStudy fieldsOfStudy,

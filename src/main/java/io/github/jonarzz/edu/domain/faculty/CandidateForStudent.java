@@ -13,8 +13,8 @@ import io.github.jonarzz.edu.domain.common.*;
 
 @ValueObject
 public record CandidateForStudent(
-        PersonIdentification personIdentification,
-        Collection<TestResult> testResults
+        Collection<TestResult> testResults,
+        PersonIdentification personIdentification
 ) implements Candidate {
 
     public CandidateForStudent {

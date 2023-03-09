@@ -258,10 +258,10 @@ class FacultyTest {
                     config
             );
             var candidate = new CandidateForStudent(
-                    PERSONAL_DATA,
                     Set.of(new TestResult(math, Score.fromPercentage(80)),
                            new TestResult(physics, Score.fromPercentage(50)),
-                           new TestResult(chemistry, Score.fromPercentage(55)))
+                           new TestResult(chemistry, Score.fromPercentage(55))),
+                    PERSONAL_DATA
             );
 
             var result = faculty.enroll(candidate);
@@ -289,10 +289,10 @@ class FacultyTest {
                     config
             );
             var candidate = new CandidateForStudent(
-                    PERSONAL_DATA,
                     Set.of(new TestResult(math, Score.fromPercentage(75)),
                            new TestResult(physics, Score.fromPercentage(30)),
-                           new TestResult(chemistry, Score.fromPercentage(31)))
+                           new TestResult(chemistry, Score.fromPercentage(31))),
+                    PERSONAL_DATA
             );
 
             var result = faculty.enroll(candidate);
@@ -328,8 +328,8 @@ class FacultyTest {
                     config
             );
             var candidate = new CandidateForStudent(
-                    PERSONAL_DATA,
-                    Set.of(new TestResult(mainSubject, Score.fromPercentage(scorePercent)))
+                    Set.of(new TestResult(mainSubject, Score.fromPercentage(scorePercent))),
+                    PERSONAL_DATA
             );
 
             var result = faculty.enroll(candidate);
@@ -361,10 +361,10 @@ class FacultyTest {
                     config
             );
             var candidate = new CandidateForStudent(
-                    PERSONAL_DATA,
                     Set.of(new TestResult(mainSubject, Score.MAX),
                            new TestResult(physics, Score.fromPercentage(scorePercent)),
-                           new TestResult(chemistry, Score.fromPercentage(scorePercent)))
+                           new TestResult(chemistry, Score.fromPercentage(scorePercent))),
+                    PERSONAL_DATA
             );
 
             var result = faculty.enroll(candidate);
@@ -388,7 +388,7 @@ class FacultyTest {
                     new Vacancies(maxVacancies),
                     new FakeFacultyConfiguration()
             );
-            var candidate = new CandidateForStudent(new PersonIdentification("5811B"), Set.of());
+            var candidate = new CandidateForStudent(Set.of(), new PersonIdentification("5811B"));
 
             var result = faculty.enroll(candidate);
 
@@ -407,7 +407,7 @@ class FacultyTest {
                     new Vacancies(30),
                     new FakeFacultyConfiguration()
             );
-            var candidate = new CandidateForStudent(PERSONAL_DATA, Set.of());
+            var candidate = new CandidateForStudent(Set.of(), PERSONAL_DATA);
 
             var result = faculty.enroll(candidate);
 

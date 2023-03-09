@@ -4,6 +4,7 @@ import lombok.experimental.*;
 
 import io.github.jonarzz.edu.domain.faculty.*;
 import io.github.jonarzz.edu.domain.professor.*;
+import io.github.jonarzz.edu.domain.student.*;
 
 @FieldDefaults(makeFinal = true)
 public class FakeDomainInjector implements DomainInjector {
@@ -11,6 +12,7 @@ public class FakeDomainInjector implements DomainInjector {
     FacultyConfiguration facultyConfiguration = new FakeFacultyConfiguration();
     FacultyRepository facultyRepository = new FakeFacultyRepository();
     ProfessorRepository professorRepository = new FakeProfessorRepository();
+    StudentRepository studentRepository = new FakeStudentRepository();
     ProfessorResignationListener professorResignationListener = new FakeProfessorResignationListener();
 
     @Override
@@ -26,6 +28,11 @@ public class FakeDomainInjector implements DomainInjector {
     @Override
     public ProfessorRepository professorRepository() {
         return professorRepository;
+    }
+
+    @Override
+    public StudentRepository studentRepository() {
+        return studentRepository;
     }
 
     @Override
