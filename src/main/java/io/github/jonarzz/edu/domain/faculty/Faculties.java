@@ -17,10 +17,6 @@ final class Faculties {
 
     Collection<FacultyView> existingFaculties;
 
-    static Faculties fromView(FacultiesView view) {
-        return new Faculties(view.faculties());
-    }
-
     Result<FacultyView> createFaculty(String name, FieldsOfStudy fieldsOfStudy,
                                       Vacancies maxProfessorVacancies,
                                       Vacancies maxStudentVacancies) {

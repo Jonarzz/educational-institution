@@ -10,4 +10,9 @@ public record FacultiesView(
         Collection<FacultyView> faculties
 ) {
 
+    Faculties toDomainObject() {
+        return new Faculties(
+                faculties
+        );
+    }
 }
