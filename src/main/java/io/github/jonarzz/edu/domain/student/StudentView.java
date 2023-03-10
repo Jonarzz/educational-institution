@@ -14,8 +14,8 @@ public record StudentView(
         this(id, personIdentification, true);
     }
 
-    public StudentView(PersonIdentification personIdentification) {
-        this(null, personIdentification, true);
+    public static StudentView newStudent(PersonIdentification personIdentification) {
+        return new StudentView(null, personIdentification);
     }
 
     public static StudentView inactive(StudentView subject) {

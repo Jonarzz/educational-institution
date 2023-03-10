@@ -1,6 +1,8 @@
-package io.github.jonarzz.edu.api;
+package io.github.jonarzz.edu.api.result;
 
 import java.util.*;
+
+import io.github.jonarzz.edu.api.*;
 
 public interface Result<T> {
 

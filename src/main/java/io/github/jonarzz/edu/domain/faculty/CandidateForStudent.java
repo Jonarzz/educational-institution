@@ -15,7 +15,7 @@ import io.github.jonarzz.edu.domain.common.*;
 public record CandidateForStudent(
         Collection<TestResult> testResults,
         PersonIdentification personIdentification
-) implements Candidate {
+) {
 
     public CandidateForStudent {
         var countByFieldOfStudy = testResults.stream()
@@ -25,6 +25,7 @@ public record CandidateForStudent(
                                                          .stream()
                                                          .filter(entry -> entry.getValue() > 1)
                                                          .map(Map.Entry::getKey)
+                                                         .sorted()
                                                          .collect(joining(", "));
         if (!duplicatedFieldsOfStudy.isEmpty()) {
             throw new IllegalArgumentException("Found more than one test result for: "

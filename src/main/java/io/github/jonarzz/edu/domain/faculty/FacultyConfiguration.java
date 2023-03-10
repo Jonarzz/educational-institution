@@ -17,8 +17,8 @@ public interface FacultyConfiguration {
 
     interface StudentCandidate {
 
-        Score minimumMainFieldOfStudyScorePercentage();
+        Score mainFieldOfStudyMinimumScorePercentage();
 
-        Score minimumSecondaryFieldOfStudyScorePercentage();
+        Score secondaryFieldOfStudyMinimumScorePercentage();
     }
 }

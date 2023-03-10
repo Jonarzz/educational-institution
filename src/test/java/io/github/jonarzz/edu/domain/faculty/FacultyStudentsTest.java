@@ -1,5 +1,6 @@
 package io.github.jonarzz.edu.domain.faculty;
 
+import static io.github.jonarzz.edu.domain.student.StudentView.*;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
@@ -9,7 +10,7 @@ import org.junit.jupiter.params.provider.*;
 import java.util.*;
 import java.util.stream.*;
 
-import io.github.jonarzz.edu.api.*;
+import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.faculty.CandidateForStudent.*;
 import io.github.jonarzz.edu.domain.student.*;
@@ -143,7 +144,7 @@ class FacultyStudentsTest {
                 FieldsOfStudy.from("math"),
                 IntStream.rangeClosed(1, maxVacancies)
                          .mapToObj(i -> new PersonIdentification(i + "A"))
-                         .map(StudentView::new)
+                         .map(StudentView::newStudent)
                          .toList(),
                 new Vacancies(maxVacancies),
                 new FakeFacultyConfiguration()
@@ -159,7 +160,7 @@ class FacultyStudentsTest {
     void rejection_alreadyEnrolled() {
         var faculty = new FacultyStudents(
                 FieldsOfStudy.from("math"),
-                Set.of(new StudentView(PERSONAL_DATA)),
+                Set.of(newStudent(PERSONAL_DATA)),
                 new Vacancies(30),
                 new FakeFacultyConfiguration()
         );

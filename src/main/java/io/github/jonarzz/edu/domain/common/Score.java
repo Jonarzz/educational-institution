@@ -25,7 +25,7 @@ public class Score {
             throw new IllegalArgumentException("Score cannot be negative");
         }
         if (percentage > MAX_PERCENTAGE) {
-            throw new IllegalArgumentException("Score cannot be greater than 100%");
+            throw new IllegalArgumentException("Score cannot be greater than " + MAX_PERCENTAGE + "%");
         }
         return new Score((int) (percentage * 100));
     }

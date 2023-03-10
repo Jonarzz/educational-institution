@@ -36,6 +36,10 @@ public class FieldsOfStudy {
         return new FieldsOfStudy(main, secondary);
     }
 
+    public Collection<String> secondary() {
+        return Set.copyOf(secondary);
+    }
+
     public int count() {
         return 1 + secondary.size();
     }
@@ -43,25 +47,23 @@ public class FieldsOfStudy {
     public int countMatching(FieldsOfStudy other) {
         Predicate<String> matchesMain = other.main::equals;
         Predicate<String> matchesSecondary = other.secondary::contains;
-        return (int) Stream.concat(Stream.of(main),
-                                   secondary.stream())
+        return (int) Stream.concat(
+                                   Stream.of(main),
+                                   secondary.stream()
+                           )
                            .filter(matchesMain.or(matchesSecondary))
                            .count();
     }
 
-    public Collection<String> secondary() {
-        return Set.copyOf(secondary);
-    }
-
     @Override
     public String toString() {
+        if (secondary.isEmpty()) {
+            return main;
+        }
         var delimiter = ", ";
         var secondaryString = secondary.stream()
                                        .sorted()
                                        .collect(joining(delimiter));
-        if (secondaryString.isEmpty()) {
-            return main;
-        }
         return main + delimiter + secondaryString;
     }
 }

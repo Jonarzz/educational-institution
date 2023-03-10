@@ -6,9 +6,9 @@ import org.junit.jupiter.api.*;
 
 import java.util.*;
 
-import io.github.jonarzz.edu.api.*;
+import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
-import io.github.jonarzz.edu.domain.student.FakeStudentResignationListener.Event;
+import io.github.jonarzz.edu.domain.student.FakeStudentResignationListener.*;
 
 class StudentTest {
 

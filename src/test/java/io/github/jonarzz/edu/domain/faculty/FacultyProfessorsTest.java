@@ -1,5 +1,6 @@
 package io.github.jonarzz.edu.domain.faculty;
 
+import static io.github.jonarzz.edu.domain.professor.ProfessorView.*;
 import static java.util.stream.Collectors.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -9,7 +10,7 @@ import org.junit.jupiter.params.provider.*;
 
 import java.util.*;
 
-import io.github.jonarzz.edu.api.*;
+import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.professor.*;
 
@@ -150,7 +151,7 @@ class FacultyProfessorsTest {
         var fieldsOfStudy = FieldsOfStudy.from("math");
         var faculty = new FacultyProfessors(
                 fieldsOfStudy,
-                Set.of(new ProfessorView(new PersonIdentification("1234"))),
+                Set.of(newProfessor(new PersonIdentification("1234"))),
                 new Vacancies(1),
                 new FakeFacultyConfiguration()
         );
@@ -168,7 +169,7 @@ class FacultyProfessorsTest {
         var fieldsOfStudy = FieldsOfStudy.from("math");
         var faculty = new FacultyProfessors(
                 fieldsOfStudy,
-                Set.of(new ProfessorView(PERSONAL_DATA)),
+                Set.of(newProfessor(PERSONAL_DATA)),
                 new Vacancies(2),
                 new FakeFacultyConfiguration()
         );

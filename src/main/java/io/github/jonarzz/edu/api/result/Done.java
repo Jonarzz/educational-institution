@@ -1,7 +1,5 @@
 package io.github.jonarzz.edu.api.result;
 
-import io.github.jonarzz.edu.api.*;
-
 public record Done<T>(
         T subject
 ) implements SuccessfulResult<T> {

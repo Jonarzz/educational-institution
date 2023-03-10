@@ -48,12 +48,12 @@ public final class FakeFacultyConfiguration implements FacultyConfiguration {
     public StudentCandidate studentCandidate() {
         return new StudentCandidate() {
             @Override
-            public Score minimumMainFieldOfStudyScorePercentage() {
+            public Score mainFieldOfStudyMinimumScorePercentage() {
                 return Score.fromPercentage(minimumStudentMainScorePercent);
             }
 
             @Override
-            public Score minimumSecondaryFieldOfStudyScorePercentage() {
+            public Score secondaryFieldOfStudyMinimumScorePercentage() {
                 return Score.fromPercentage(minimumStudentSecondaryScorePercent);
             }
         };

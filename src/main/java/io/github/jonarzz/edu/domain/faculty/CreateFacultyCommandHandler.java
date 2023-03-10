@@ -5,6 +5,7 @@ import lombok.experimental.*;
 import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
 
 import io.github.jonarzz.edu.api.*;
+import io.github.jonarzz.edu.api.result.*;
 
 @Service
 @RequiredArgsConstructor

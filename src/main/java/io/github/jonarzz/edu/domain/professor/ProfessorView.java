@@ -13,12 +13,12 @@ public record ProfessorView(
         boolean active
 ) {
 
-    public ProfessorView(PersonIdentification personIdentification) {
-        this(null, personIdentification, true);
-    }
-
     public ProfessorView(UUID id, PersonIdentification personIdentification) {
         this(id, personIdentification, true);
+    }
+
+    public static ProfessorView newProfessor(PersonIdentification personIdentification) {
+        return new ProfessorView(null, personIdentification);
     }
 
     public static ProfessorView inactive(ProfessorView subject) {

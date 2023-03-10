@@ -8,14 +8,13 @@ import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
 import java.util.*;
 import java.util.stream.*;
 
-import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.student.*;
 
 @AggregateRoot
 @FieldDefaults(makeFinal = true)
-final class FacultyStudents {
+class FacultyStudents {
 
     FieldsOfStudy fieldsOfStudy;
     Collection<StudentView> enrolledStudents;
@@ -37,11 +36,11 @@ final class FacultyStudents {
 
     Result<StudentView> enroll(CandidateForStudent candidate) {
         return enrollmentRules()
-                .map(rule -> rule.validate(candidate))
+                .map(rule -> rule.calculateViolation(candidate))
                 .<Result<StudentView>>flatMap(Optional::stream)
                 .findFirst()
                 .orElseGet(() -> {
-                    var newStudent = new StudentView(candidate.personIdentification());
+                    var newStudent = StudentView.newStudent(candidate.personIdentification());
                     enrolledStudents.add(newStudent);
                     return new Created<>(newStudent);
                 });
@@ -58,16 +57,16 @@ final class FacultyStudents {
 
     private interface StudentEnrollmentRule {
 
-        Optional<RuleViolated<StudentView>> validate(CandidateForStudent candidate);
+        Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate);
     }
 
     private class MainFieldOfStudyScoreRule implements StudentEnrollmentRule {
 
         @Override
-        public Optional<RuleViolated<StudentView>> validate(CandidateForStudent candidate) {
+        public Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate) {
             var score = candidate.getScoreFor(fieldsOfStudy.main());
             var minimumScore = config.studentCandidate()
-                                     .minimumMainFieldOfStudyScorePercentage();
+                                     .mainFieldOfStudyMinimumScorePercentage();
             if (score.isLowerThan(minimumScore)) {
                 return Optional.of(
                         new RuleViolated<>("Student main faculty score %s is lower than minimum %s"
@@ -82,9 +81,9 @@ final class FacultyStudents {
     private class SecondaryFieldOfStudyScoreRule implements StudentEnrollmentRule {
 
         @Override
-        public Optional<RuleViolated<StudentView>> validate(CandidateForStudent candidate) {
+        public Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate) {
             var minimumScore = config.studentCandidate()
-                                     .minimumSecondaryFieldOfStudyScorePercentage();
+                                     .secondaryFieldOfStudyMinimumScorePercentage();
             var fieldsOfStudyWithNotEnoughScore =
                     fieldsOfStudy.secondary()
                                  .stream()
@@ -106,14 +105,14 @@ final class FacultyStudents {
     private class DuplicatePreventingRule implements StudentEnrollmentRule {
 
         @Override
-        public Optional<RuleViolated<StudentView>> validate(CandidateForStudent candidate) {
+        public Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate) {
             if (alreadyEmployed(candidate)) {
                 return Optional.of(new RuleViolated<>("The student is already enrolled"));
             }
             return Optional.empty();
         }
 
-        private boolean alreadyEmployed(Candidate candidate) {
+        private boolean alreadyEmployed(CandidateForStudent candidate) {
             var candidateNationalId = candidate.personIdentification()
                                                .nationalIdNumber();
             return enrolledStudents.stream()
@@ -126,7 +125,7 @@ final class FacultyStudents {
     private class VacancyRule implements StudentEnrollmentRule {
 
         @Override
-        public Optional<RuleViolated<StudentView>> validate(CandidateForStudent candidate) {
+        public Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate) {
             if (enrolledStudents.size() == maxStudentVacancies.count()) {
                 return Optional.of(
                         new RuleViolated<>("There is no vacancy")

@@ -2,15 +2,16 @@ package io.github.jonarzz.edu.domain.faculty;
 
 import lombok.*;
 import lombok.experimental.*;
+import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
 
 import java.util.*;
 import java.util.stream.*;
 
-import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.professor.*;
 
+@AggregateRoot
 @FieldDefaults(makeFinal = true)
 class FacultyProfessors {
 
@@ -34,11 +35,11 @@ class FacultyProfessors {
 
     Result<ProfessorView> employ(CandidateForProfessor candidate) {
         return employmentRules()
-                .map(rule -> rule.validate(candidate))
+                .map(rule -> rule.calculateViolation(candidate))
                 .<Result<ProfessorView>>flatMap(Optional::stream)
                 .findFirst()
                 .orElseGet(() -> {
-                    var newProfessor = new ProfessorView(candidate.personIdentification());
+                    var newProfessor = ProfessorView.newProfessor(candidate.personIdentification());
                     employedProfessors.add(newProfessor);
                     return new Created<>(newProfessor);
                 });
@@ -55,20 +56,20 @@ class FacultyProfessors {
 
     private interface ProfessorEmploymentRule {
 
-        Optional<RuleViolated<ProfessorView>> validate(CandidateForProfessor candidate);
+        Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate);
     }
 
     private class DuplicatePreventingRule implements ProfessorEmploymentRule {
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> validate(CandidateForProfessor candidate) {
+        public Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
             if (alreadyEmployed(candidate)) {
                 return Optional.of(new RuleViolated<>("The professor is already employed"));
             }
             return Optional.empty();
         }
 
-        private boolean alreadyEmployed(Candidate candidate) {
+        private boolean alreadyEmployed(CandidateForProfessor candidate) {
             var candidateNationalId = candidate.personIdentification()
                                                .nationalIdNumber();
             return employedProfessors.stream()
@@ -81,7 +82,7 @@ class FacultyProfessors {
     private class VacancyRule implements ProfessorEmploymentRule {
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> validate(CandidateForProfessor candidate) {
+        public Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
             if (employedProfessors.size() == maxVacancies.count()) {
                 return Optional.of(
                         new RuleViolated<>("There is no vacancy")
@@ -94,7 +95,7 @@ class FacultyProfessors {
     private record YearsOfExperienceRule(FacultyConfiguration config) implements ProfessorEmploymentRule {
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> validate(CandidateForProfessor candidate) {
+        public Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
             var candidateExperience = candidate.yearsOfExperience();
             var minExperience = config.professorCandidate()
                                       .minimumYearsOfExperience();
@@ -115,7 +116,7 @@ class FacultyProfessors {
         FacultyConfiguration config;
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> validate(CandidateForProfessor candidate) {
+        public Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
             var candidateFieldsOfStudy = candidate.fieldsOfStudy();
             var matchingCount = fieldsOfStudy.countMatching(candidateFieldsOfStudy);
             if (matchingCount == fieldsOfStudy.count()) {

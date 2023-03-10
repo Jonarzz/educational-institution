@@ -9,6 +9,6 @@ public record CandidateForProfessor(
         int yearsOfExperience,
         FieldsOfStudy fieldsOfStudy,
         PersonIdentification personIdentification
-) implements Candidate {
+) {
 
 }

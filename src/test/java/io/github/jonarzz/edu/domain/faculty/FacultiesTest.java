@@ -6,10 +6,8 @@ import org.junit.jupiter.api.*;
 
 import java.util.*;
 
-import io.github.jonarzz.edu.api.*;
+import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
-import io.github.jonarzz.edu.domain.professor.*;
-import io.github.jonarzz.edu.domain.student.*;
 
 class FacultiesTest {
 
@@ -36,21 +34,9 @@ class FacultiesTest {
     void tryToCreateFacultyThatAlreadyExists() {
         var facultyName = "Mathematics";
         var fieldsOfStudy = FieldsOfStudy.from("math");
-        var employedProfessors = Set.<ProfessorView>of();
         var maxProfessorVacancies = new Vacancies(1);
         var maxStudentVacancies = new Vacancies(15);
-        var enrolledStudents = Set.<StudentView>of();
-        var faculties = new Faculties(Set.of(
-                new FacultyView(
-                        UUID.randomUUID(),
-                        facultyName,
-                        fieldsOfStudy,
-                        employedProfessors,
-                        maxProfessorVacancies,
-                        enrolledStudents,
-                        maxStudentVacancies
-                )
-        ));
+        var faculties = new Faculties(Set.of(facultyName));
 
         var result = faculties.createFaculty(facultyName, fieldsOfStudy,
                                              maxProfessorVacancies, maxStudentVacancies);

@@ -1,4 +1,4 @@
-package io.github.jonarzz.edu.api;
+package io.github.jonarzz.edu.api.result;
 
 public interface FailedResult<T> extends Result<T> {
 
