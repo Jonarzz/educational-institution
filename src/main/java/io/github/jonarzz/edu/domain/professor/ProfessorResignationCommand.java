@@ -15,6 +15,7 @@ public record ProfessorResignationCommand(
     public ProfessorResignationCommandHandler getHandler(DomainInjector injector) {
         return new ProfessorResignationCommandHandler(
                 injector.professorRepository(),
+                injector.professorConfiguration(),
                 injector.professorResignationListener()
         );
     }

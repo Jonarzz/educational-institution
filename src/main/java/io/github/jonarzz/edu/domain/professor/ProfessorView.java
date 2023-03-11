@@ -10,26 +10,50 @@ import io.github.jonarzz.edu.domain.common.*;
 public record ProfessorView(
         UUID id,
         PersonIdentification personIdentification,
+        FieldsOfStudy fieldsOfStudy,
+        int leadCoursesCount,
         boolean active
 ) {
 
-    public ProfessorView(UUID id, PersonIdentification personIdentification) {
-        this(id, personIdentification, true);
+    public ProfessorView {
+        if (leadCoursesCount < 0) {
+            throw new IllegalArgumentException("Number of courses lead by a professor cannot be negative");
+        }
     }
 
-    public static ProfessorView newProfessor(PersonIdentification personIdentification) {
-        return new ProfessorView(null, personIdentification);
+    public ProfessorView(
+            UUID id,
+            PersonIdentification personIdentification,
+            FieldsOfStudy fieldsOfStudy
+    ) {
+        this(id, personIdentification, fieldsOfStudy, 0, true);
+    }
+
+    public static ProfessorView newProfessor(
+            PersonIdentification personIdentification,
+            FieldsOfStudy fieldsOfStudy
+    ) {
+        return new ProfessorView(null, personIdentification, fieldsOfStudy);
     }
 
     public static ProfessorView inactive(ProfessorView subject) {
-        return new ProfessorView(subject.id, subject.personIdentification, false);
+        return new ProfessorView(
+                subject.id, subject.personIdentification, subject.fieldsOfStudy, subject.leadCoursesCount,
+                false
+        );
     }
 
-    Professor toDomainObject(ProfessorResignationListener resignationListener) {
+    Professor toDomainObject(
+            ProfessorConfiguration config,
+            ProfessorResignationListener resignationListener
+    ) {
         return new Professor(
                 id,
                 personIdentification,
+                fieldsOfStudy,
+                leadCoursesCount,
                 active,
+                config,
                 resignationListener
         );
     }

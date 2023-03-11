@@ -1,5 +1,6 @@
 package io.github.jonarzz.edu.domain.professor;
 
+import static io.github.jonarzz.edu.domain.professor.ProfessorView.*;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
@@ -21,7 +22,9 @@ class ProfessorResignationCommandTest {
         var resignationReason = "Personal reasons";
         var command = new ProfessorResignationCommand(professorId, resignationReason);
         professorRepository.create(facultyId, new ProfessorView(
-                professorId, new PersonIdentification("2515A551B")
+                professorId,
+                new PersonIdentification("2515A551B"),
+                FieldsOfStudy.from("math")
         ));
 
         var result = command.getHandler(injector)
@@ -43,9 +46,11 @@ class ProfessorResignationCommandTest {
         var active = false;
         var resignationReason = "Personal reasons";
         var command = new ProfessorResignationCommand(professorId, resignationReason);
-        var professorBeforeHandling = new ProfessorView(
-                professorId, new PersonIdentification("5021515AB35"), active
-        );
+        var professorBeforeHandling = inactive(new ProfessorView(
+                professorId,
+                new PersonIdentification("5021515AB35"),
+                FieldsOfStudy.from("math")
+        ));
         professorRepository.create(facultyId, professorBeforeHandling);
 
         var result = command.getHandler(injector)

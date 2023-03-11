@@ -13,12 +13,13 @@ import io.github.jonarzz.edu.api.result.*;
 class ProfessorResignationCommandHandler implements CommandHandler<ProfessorResignationCommand, ProfessorView> {
 
     ProfessorRepository professorRepository;
-    ProfessorResignationListener professorResignationListener;
+    ProfessorConfiguration config;
+    ProfessorResignationListener resignationListener;
 
     @Override
     public Result<ProfessorView> handle(ProfessorResignationCommand command) {
         var professor = professorRepository.getById(command.professorId())
-                                           .toDomainObject(professorResignationListener);
+                                           .toDomainObject(config, resignationListener);
         var result = professor.resign(command.resignationReason());
         if (result.isOk()) {
             professorRepository.update(result.getSubject());

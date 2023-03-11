@@ -32,15 +32,16 @@ class FacultyProfessorsTest {
                 new Vacancies(1),
                 config
         );
+        var candidateFieldsOfStudy = FieldsOfStudy.from("math", "physics");
         var candidate = new CandidateForProfessor(
                 yearsOfExperience,
-                FieldsOfStudy.from("math", "physics"),
+                candidateFieldsOfStudy,
                 PERSONAL_DATA
         );
 
         var result = faculty.employ(candidate);
 
-        assertSuccess(result);
+        assertSuccess(result, candidateFieldsOfStudy);
     }
 
     @Test
@@ -61,7 +62,7 @@ class FacultyProfessorsTest {
 
         var result = faculty.employ(candidate);
 
-        assertSuccess(result);
+        assertSuccess(result, fieldsOfStudy);
     }
 
     @Test
@@ -82,7 +83,7 @@ class FacultyProfessorsTest {
 
         var result = faculty.employ(candidate);
 
-        assertSuccess(result);
+        assertSuccess(result, fieldsOfStudy);
     }
 
     @ParameterizedTest(name = "years of experience = {0}")
@@ -151,7 +152,7 @@ class FacultyProfessorsTest {
         var fieldsOfStudy = FieldsOfStudy.from("math");
         var faculty = new FacultyProfessors(
                 fieldsOfStudy,
-                Set.of(newProfessor(new PersonIdentification("1234"))),
+                Set.of(newProfessor(new PersonIdentification("1234"), fieldsOfStudy)),
                 new Vacancies(1),
                 new FakeFacultyConfiguration()
         );
@@ -169,7 +170,7 @@ class FacultyProfessorsTest {
         var fieldsOfStudy = FieldsOfStudy.from("math");
         var faculty = new FacultyProfessors(
                 fieldsOfStudy,
-                Set.of(newProfessor(PERSONAL_DATA)),
+                Set.of(newProfessor(PERSONAL_DATA, fieldsOfStudy)),
                 new Vacancies(2),
                 new FakeFacultyConfiguration()
         );
@@ -191,14 +192,16 @@ class FacultyProfessorsTest {
         );
     }
 
-    private static void assertSuccess(Result<ProfessorView> result) {
+    private static void assertSuccess(Result<ProfessorView> result,
+                                      FieldsOfStudy expectedFieldsOfStudy) {
         assertThat(result)
                 .as(result.toString())
                 .returns(true, Result::isOk)
                 .extracting(Result::getSubject)
                 .returns(null, ProfessorView::id)
                 .returns(true, ProfessorView::active)
-                .returns(PERSONAL_DATA, ProfessorView::personIdentification);
+                .returns(PERSONAL_DATA, ProfessorView::personIdentification)
+                .returns(expectedFieldsOfStudy, ProfessorView::fieldsOfStudy);
     }
 
     private static void assertFailure(Result<?> result, String expectedMessage) {

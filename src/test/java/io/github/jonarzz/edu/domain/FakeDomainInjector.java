@@ -13,6 +13,7 @@ public class FakeDomainInjector implements DomainInjector {
     FacultyRepository facultyRepository = new FakeFacultyRepository();
     ProfessorRepository professorRepository = new FakeProfessorRepository();
     StudentRepository studentRepository = new FakeStudentRepository();
+    ProfessorConfiguration professorConfiguration = new FakeProfessorConfiguration();
     ProfessorResignationListener professorResignationListener = new FakeProfessorResignationListener();
     StudentResignationListener studentResignationListener = new FakeStudentResignationListener();
 
@@ -34,6 +35,11 @@ public class FakeDomainInjector implements DomainInjector {
     @Override
     public StudentRepository studentRepository() {
         return studentRepository;
+    }
+
+    @Override
+    public ProfessorConfiguration professorConfiguration() {
+        return professorConfiguration;
     }
 
     @Override

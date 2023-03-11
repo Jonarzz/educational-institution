@@ -14,6 +14,8 @@ public interface DomainInjector {
 
     StudentRepository studentRepository();
 
+    ProfessorConfiguration professorConfiguration();
+
     ProfessorResignationListener professorResignationListener();
 
     StudentResignationListener studentResignationListener();

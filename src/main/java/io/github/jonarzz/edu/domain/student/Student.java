@@ -30,7 +30,7 @@ class Student {
         return new Done<>(inactiveStudent);
     }
 
-    StudentView toView() {
+    private StudentView toView() {
         return new StudentView(
                 id,
                 personIdentification

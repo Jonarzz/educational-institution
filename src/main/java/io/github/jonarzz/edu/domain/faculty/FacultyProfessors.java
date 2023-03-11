@@ -39,7 +39,10 @@ class FacultyProfessors {
                 .<Result<ProfessorView>>flatMap(Optional::stream)
                 .findFirst()
                 .orElseGet(() -> {
-                    var newProfessor = ProfessorView.newProfessor(candidate.personIdentification());
+                    var newProfessor = ProfessorView.newProfessor(
+                            candidate.personIdentification(),
+                            candidate.fieldsOfStudy()
+                    );
                     employedProfessors.add(newProfessor);
                     return new Created<>(newProfessor);
                 });
