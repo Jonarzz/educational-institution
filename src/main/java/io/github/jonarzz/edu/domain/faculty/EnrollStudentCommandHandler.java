@@ -21,11 +21,11 @@ class EnrollStudentCommandHandler implements CommandHandler<EnrollStudentCommand
     public Result<StudentView> handle(EnrollStudentCommand command) {
         var institutionId = command.educationalInstitutionId();
         var facultyName = command.facultyName();
-        var facultyView = facultyRepository.getEducationalInstitutionFaculty(institutionId, facultyName);
-        var facultyStudents = facultyView.studentsDomainObject(facultyConfiguration);
+        var studentsView = facultyRepository.getFacultyStudents(institutionId, facultyName);
+        var facultyStudents = studentsView.toDomainObject(facultyConfiguration);
         var result = facultyStudents.enroll(command.candidate());
         if (result.isOk()) {
-            studentRepository.create(facultyView.id(), result.getSubject());
+            studentRepository.saveNew(studentsView.facultyId(), result.getSubject());
         }
         return result;
     }

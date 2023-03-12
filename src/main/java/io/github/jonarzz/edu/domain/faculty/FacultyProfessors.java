@@ -1,5 +1,7 @@
 package io.github.jonarzz.edu.domain.faculty;
 
+import static io.github.jonarzz.edu.domain.professor.ProfessorView.*;
+
 import lombok.*;
 import lombok.experimental.*;
 import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
@@ -16,19 +18,19 @@ import io.github.jonarzz.edu.domain.professor.*;
 class FacultyProfessors {
 
     FieldsOfStudy fieldsOfStudy;
-    Collection<ProfessorView> employedProfessors;
+    Collection<PersonIdentification> employedProfessorIds;
     Vacancies maxVacancies;
 
     FacultyConfiguration config;
 
     FacultyProfessors(
             FieldsOfStudy fieldsOfStudy,
-            Collection<ProfessorView> employedProfessors,
+            Collection<PersonIdentification> employedProfessorIds,
             Vacancies maxVacancies,
             FacultyConfiguration config
     ) {
         this.fieldsOfStudy = fieldsOfStudy;
-        this.employedProfessors = new HashSet<>(employedProfessors);
+        this.employedProfessorIds = Set.copyOf(employedProfessorIds);
         this.maxVacancies = maxVacancies;
         this.config = config;
     }
@@ -38,14 +40,10 @@ class FacultyProfessors {
                 .map(rule -> rule.calculateViolation(candidate))
                 .<Result<ProfessorView>>flatMap(Optional::stream)
                 .findFirst()
-                .orElseGet(() -> {
-                    var newProfessor = ProfessorView.newProfessor(
-                            candidate.personIdentification(),
-                            candidate.fieldsOfStudy()
-                    );
-                    employedProfessors.add(newProfessor);
-                    return new Created<>(newProfessor);
-                });
+                .orElseGet(() -> new Created<>(newProfessor(
+                        candidate.personIdentification(),
+                        candidate.fieldsOfStudy()
+                )));
     }
 
     private Stream<ProfessorEmploymentRule> employmentRules() {
@@ -66,6 +64,7 @@ class FacultyProfessors {
 
         @Override
         public Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
+            // TODO take 'active' flag into account
             if (alreadyEmployed(candidate)) {
                 return Optional.of(new RuleViolated<>("The professor is already employed"));
             }
@@ -75,10 +74,9 @@ class FacultyProfessors {
         private boolean alreadyEmployed(CandidateForProfessor candidate) {
             var candidateNationalId = candidate.personIdentification()
                                                .nationalIdNumber();
-            return employedProfessors.stream()
-                                     .map(ProfessorView::personIdentification)
-                                     .map(PersonIdentification::nationalIdNumber)
-                                     .anyMatch(candidateNationalId::equals);
+            return employedProfessorIds.stream()
+                                       .map(PersonIdentification::nationalIdNumber)
+                                       .anyMatch(candidateNationalId::equals);
         }
     }
 
@@ -86,7 +84,7 @@ class FacultyProfessors {
 
         @Override
         public Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
-            if (employedProfessors.size() == maxVacancies.count()) {
+            if (employedProfessorIds.size() == maxVacancies.count()) {
                 return Optional.of(
                         new RuleViolated<>("There is no vacancy")
                 );

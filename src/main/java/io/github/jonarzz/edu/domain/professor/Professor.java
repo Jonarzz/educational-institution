@@ -48,7 +48,7 @@ class Professor {
             return new RuleViolated<>("Professor cannot create a course without required qualifications: "
                                       + join(", ", mismatchedFieldsOfStudy));
         }
-        // TODO add faculty-related rules
+        // TODO add faculty-related rules (FacultyCourses) + split view into 2 records?
         return new Created<>(newCourse(name, fieldsOfStudy));
     }
 

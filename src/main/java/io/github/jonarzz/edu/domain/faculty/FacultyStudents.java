@@ -1,5 +1,6 @@
 package io.github.jonarzz.edu.domain.faculty;
 
+import static io.github.jonarzz.edu.domain.student.StudentView.*;
 import static java.util.stream.Collectors.*;
 
 import lombok.experimental.*;
@@ -17,19 +18,19 @@ import io.github.jonarzz.edu.domain.student.*;
 class FacultyStudents {
 
     FieldsOfStudy fieldsOfStudy;
-    Collection<StudentView> enrolledStudents;
+    Collection<PersonIdentification> enrolledStudentIds;
     Vacancies maxStudentVacancies;
 
     FacultyConfiguration config;
 
     FacultyStudents(
             FieldsOfStudy fieldsOfStudy,
-            Collection<StudentView> enrolledStudents,
+            Collection<PersonIdentification> enrolledStudentIds,
             Vacancies maxStudentVacancies,
             FacultyConfiguration config
     ) {
         this.fieldsOfStudy = fieldsOfStudy;
-        this.enrolledStudents = new HashSet<>(enrolledStudents);
+        this.enrolledStudentIds = Set.copyOf(enrolledStudentIds);
         this.maxStudentVacancies = maxStudentVacancies;
         this.config = config;
     }
@@ -39,11 +40,9 @@ class FacultyStudents {
                 .map(rule -> rule.calculateViolation(candidate))
                 .<Result<StudentView>>flatMap(Optional::stream)
                 .findFirst()
-                .orElseGet(() -> {
-                    var newStudent = StudentView.newStudent(candidate.personIdentification());
-                    enrolledStudents.add(newStudent);
-                    return new Created<>(newStudent);
-                });
+                .orElseGet(() -> new Created<>(newStudent(
+                        candidate.personIdentification()
+                )));
     }
 
     private Stream<StudentEnrollmentRule> enrollmentRules() {
@@ -115,10 +114,9 @@ class FacultyStudents {
         private boolean alreadyEmployed(CandidateForStudent candidate) {
             var candidateNationalId = candidate.personIdentification()
                                                .nationalIdNumber();
-            return enrolledStudents.stream()
-                                   .map(StudentView::personIdentification)
-                                   .map(PersonIdentification::nationalIdNumber)
-                                   .anyMatch(candidateNationalId::equals);
+            return enrolledStudentIds.stream()
+                                     .map(PersonIdentification::nationalIdNumber)
+                                     .anyMatch(candidateNationalId::equals);
         }
     }
 
@@ -126,7 +124,7 @@ class FacultyStudents {
 
         @Override
         public Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate) {
-            if (enrolledStudents.size() == maxStudentVacancies.count()) {
+            if (enrolledStudentIds.size() == maxStudentVacancies.count()) {
                 return Optional.of(
                         new RuleViolated<>("There is no vacancy")
                 );

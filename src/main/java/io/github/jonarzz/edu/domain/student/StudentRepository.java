@@ -9,5 +9,5 @@ public interface StudentRepository {
 
     Collection<StudentView> getByFacultyId(UUID facultyId);
 
-    void create(UUID facultyId, StudentView student);
+    void saveNew(UUID facultyId, StudentView student);
 }

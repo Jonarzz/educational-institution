@@ -1,6 +1,5 @@
 package io.github.jonarzz.edu.domain.faculty;
 
-import static io.github.jonarzz.edu.domain.professor.ProfessorView.*;
 import static java.util.stream.Collectors.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -152,7 +151,7 @@ class FacultyProfessorsTest {
         var fieldsOfStudy = FieldsOfStudy.from("math");
         var faculty = new FacultyProfessors(
                 fieldsOfStudy,
-                Set.of(newProfessor(new PersonIdentification("1234"), fieldsOfStudy)),
+                Set.of(new PersonIdentification("1234")),
                 new Vacancies(1),
                 new FakeFacultyConfiguration()
         );
@@ -170,7 +169,7 @@ class FacultyProfessorsTest {
         var fieldsOfStudy = FieldsOfStudy.from("math");
         var faculty = new FacultyProfessors(
                 fieldsOfStudy,
-                Set.of(newProfessor(PERSONAL_DATA, fieldsOfStudy)),
+                Set.of(PERSONAL_DATA),
                 new Vacancies(2),
                 new FakeFacultyConfiguration()
         );

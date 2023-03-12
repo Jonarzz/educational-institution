@@ -8,7 +8,7 @@ import io.github.jonarzz.edu.domain.common.*;
 @Builder
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true)
-public final class FakeFacultyConfiguration implements FacultyConfiguration {
+public class FakeFacultyConfiguration implements FacultyConfiguration {
 
     static final int DEFAULT_MIN_PROF_YEARS_OF_EXPERIENCE = 5;
     static final int DEFAULT_PROFESSOR_MIN_NUMBER_OF_MATCHING_FIELDS_OF_STUDY = 1;

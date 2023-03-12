@@ -8,6 +8,7 @@ import java.util.*;
 
 import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
+import io.github.jonarzz.edu.domain.faculty.Views.*;
 
 class FacultiesTest {
 
@@ -26,8 +27,8 @@ class FacultiesTest {
                 .as(result.toString())
                 .returns(true, Result::isOk)
                 .extracting(Result::getSubject)
-                .returns(facultyName, FacultyView::name)
-                .returns(fieldsOfStudy, FacultyView::fieldsOfStudy);
+                .returns(facultyName, NewFacultyView::name)
+                .returns(fieldsOfStudy, NewFacultyView::fieldsOfStudy);
     }
 
     @Test

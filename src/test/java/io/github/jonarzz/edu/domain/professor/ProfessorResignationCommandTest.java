@@ -21,7 +21,7 @@ class ProfessorResignationCommandTest {
         var professorId = UUID.randomUUID();
         var resignationReason = "Personal reasons";
         var command = new ProfessorResignationCommand(professorId, resignationReason);
-        professorRepository.create(facultyId, new ProfessorView(
+        professorRepository.saveNew(facultyId, new ProfessorView(
                 professorId,
                 new PersonIdentification("2515A551B"),
                 FieldsOfStudy.from("math")
@@ -51,7 +51,7 @@ class ProfessorResignationCommandTest {
                 new PersonIdentification("5021515AB35"),
                 FieldsOfStudy.from("math")
         ));
-        professorRepository.create(facultyId, professorBeforeHandling);
+        professorRepository.saveNew(facultyId, professorBeforeHandling);
 
         var result = command.getHandler(injector)
                             .handle(command);

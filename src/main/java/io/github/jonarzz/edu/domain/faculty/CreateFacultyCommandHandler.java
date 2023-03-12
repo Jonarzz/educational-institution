@@ -6,25 +6,27 @@ import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
 
 import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.api.result.*;
+import io.github.jonarzz.edu.domain.faculty.Views.*;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
-class CreateFacultyCommandHandler implements CommandHandler<CreateFacultyCommand, FacultyView> {
+class CreateFacultyCommandHandler implements CommandHandler<CreateFacultyCommand, NewFacultyView> {
 
     FacultyRepository facultyRepository;
 
     @Override
-    public Result<FacultyView> handle(CreateFacultyCommand command) {
+    public Result<NewFacultyView> handle(CreateFacultyCommand command) {
         var institutionId = command.educationalInstitutionId();
-        var faculties = facultyRepository.getAllEducationalInstitutionFaculties(institutionId)
-                                         .toDomainObject();
+        var faculties = new Faculties(
+                facultyRepository.getAllFacultyNames(institutionId)
+        );
         var result = faculties.createFaculty(command.name(),
                                              command.fieldsOfStudy(),
                                              command.maxProfessorVacancies(),
                                              command.maxStudentVacancies());
         if (result.isOk()) {
-            facultyRepository.create(institutionId, result.getSubject());
+            facultyRepository.saveNew(institutionId, result.getSubject());
         }
         return result;
     }

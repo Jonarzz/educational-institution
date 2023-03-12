@@ -8,21 +8,22 @@ import java.util.*;
 
 import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
+import io.github.jonarzz.edu.domain.faculty.Views.*;
 
-@AggregateRoot
+@Factory
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
-final class Faculties {
+class Faculties {
 
     Collection<String> existingFacultyNames;
 
-    Result<FacultyView> createFaculty(String name, FieldsOfStudy fieldsOfStudy,
-                                      Vacancies maxProfessorVacancies,
-                                      Vacancies maxStudentVacancies) {
+    Result<NewFacultyView> createFaculty(String name, FieldsOfStudy fieldsOfStudy,
+                                         Vacancies maxProfessorVacancies,
+                                         Vacancies maxStudentVacancies) {
         if (existingFacultyNames.contains(name)) {
             return new AlreadyExists<>("faculty", "name", name);
         }
-        return new Created<>(FacultyView.newFaculty(
+        return new Created<>(new NewFacultyView(
                 name,
                 fieldsOfStudy,
                 maxProfessorVacancies,

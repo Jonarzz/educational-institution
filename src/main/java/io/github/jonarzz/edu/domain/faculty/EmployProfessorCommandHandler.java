@@ -21,11 +21,11 @@ class EmployProfessorCommandHandler implements CommandHandler<EmployProfessorCom
     public Result<ProfessorView> handle(EmployProfessorCommand command) {
         var institutionId = command.educationalInstitutionId();
         var facultyName = command.facultyName();
-        var facultyView = facultyRepository.getEducationalInstitutionFaculty(institutionId, facultyName);
-        var facultyProfessors = facultyView.professorsDomainObject(facultyConfiguration);
+        var professorsView = facultyRepository.getFacultyProfessors(institutionId, facultyName);
+        var facultyProfessors = professorsView.toDomainObject(facultyConfiguration);
         var result = facultyProfessors.employ(command.candidate());
         if (result.isOk()) {
-            professorRepository.create(facultyView.id(), result.getSubject());
+            professorRepository.saveNew(professorsView.facultyId(), result.getSubject());
         }
         return result;
     }

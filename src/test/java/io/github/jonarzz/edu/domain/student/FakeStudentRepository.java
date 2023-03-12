@@ -17,7 +17,7 @@ public class FakeStudentRepository  extends InMemoryAggregatedEntityRepository<S
     }
 
     @Override
-    public void create(UUID facultyId, StudentView student) {
+    public void saveNew(UUID facultyId, StudentView student) {
         add(facultyId, student);
     }
 

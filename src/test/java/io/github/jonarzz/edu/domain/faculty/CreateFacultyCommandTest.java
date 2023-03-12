@@ -8,6 +8,7 @@ import java.util.*;
 
 import io.github.jonarzz.edu.domain.*;
 import io.github.jonarzz.edu.domain.common.*;
+import io.github.jonarzz.edu.domain.faculty.Views.*;
 
 class CreateFacultyCommandTest {
 
@@ -23,8 +24,8 @@ class CreateFacultyCommandTest {
         var maxStudentVacancies = new Vacancies(30);
         var command = new CreateFacultyCommand(institutionId, newFacultyName, fieldsOfStudy,
                                                maxProfessorVacancies, maxStudentVacancies);
-        facultyRepository.create(institutionId, new FacultyView(
-                institutionId, "existing faculty", fieldsOfStudy, Set.of(), maxProfessorVacancies, Set.of(), maxStudentVacancies
+        facultyRepository.saveNew(institutionId, new NewFacultyView(
+                "existing faculty", fieldsOfStudy, maxProfessorVacancies, maxStudentVacancies
         ));
 
         var result = command.getHandler(injector)
@@ -33,9 +34,8 @@ class CreateFacultyCommandTest {
         assertThat(result.isOk())
                 .as(result.toString())
                 .isTrue();
-        assertThat(facultyRepository.getAllEducationalInstitutionFaculties(institutionId)
-                                    .faculties())
-                .filteredOn(FacultyView::name, newFacultyName)
+        assertThat(facultyRepository.getAllFacultyNames(institutionId))
+                .filteredOn(newFacultyName::equals)
                 .as("New faculty")
                 .hasSize(1);
     }
@@ -49,8 +49,8 @@ class CreateFacultyCommandTest {
         var maxStudentVacancies = new Vacancies(50);
         var command = new CreateFacultyCommand(institutionId, facultyName, fieldsOfStudy,
                                                maxProfessorVacancies, maxStudentVacancies);
-        facultyRepository.create(institutionId, new FacultyView(
-                institutionId, facultyName, fieldsOfStudy, Set.of(), maxProfessorVacancies, Set.of(), maxStudentVacancies
+        facultyRepository.saveNew(institutionId, new NewFacultyView(
+                facultyName, fieldsOfStudy, maxProfessorVacancies, maxStudentVacancies
         ));
 
         var result = command.getHandler(injector)
@@ -59,8 +59,7 @@ class CreateFacultyCommandTest {
         assertThat(result.isOk())
                 .as(result.toString())
                 .isFalse();
-        assertThat(facultyRepository.getAllEducationalInstitutionFaculties(institutionId)
-                                    .faculties())
+        assertThat(facultyRepository.getAllFacultyNames(institutionId))
                 .as("All faculties")
                 .hasSize(1);
     }

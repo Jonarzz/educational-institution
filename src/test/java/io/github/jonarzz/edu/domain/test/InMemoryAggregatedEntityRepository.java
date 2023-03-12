@@ -29,6 +29,14 @@ public abstract class InMemoryAggregatedEntityRepository<V> {
         return entitiesByAggregatingId.getOrDefault(aggregatingId, Set.of());
     }
 
+    protected V firstMatching(UUID aggregatingId, Predicate<V> predicate) {
+        return getByAggregatingId(aggregatingId)
+                .stream()
+                .filter(predicate)
+                .findFirst()
+                .orElseThrow();
+    }
+
     protected void replace(V object) {
         for (var entities : entitiesByAggregatingId.values()) {
             for (var entity : entities) {

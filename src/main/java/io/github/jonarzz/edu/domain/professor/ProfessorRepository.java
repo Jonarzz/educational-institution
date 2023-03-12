@@ -11,7 +11,7 @@ public interface ProfessorRepository {
 
     Collection<ProfessorView> getByFacultyId(UUID facultyId);
 
-    void create(UUID facultyId, ProfessorView professor);
+    void saveNew(UUID facultyId, ProfessorView professor);
 
     void update(ProfessorView professor);
 }

@@ -9,6 +9,7 @@ import java.util.*;
 import io.github.jonarzz.edu.domain.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.faculty.CandidateForStudent.*;
+import io.github.jonarzz.edu.domain.faculty.Views.*;
 import io.github.jonarzz.edu.domain.student.*;
 
 class EnrollStudentCommandTest {
@@ -22,7 +23,6 @@ class EnrollStudentCommandTest {
     @Test
     void successfullyHandleStudentEnrollmentCommand() {
         var institutionId = UUID.randomUUID();
-        var facultyId = UUID.randomUUID();
         var facultyName = "Mathematics";
         var fieldOfStudyName = "math";
         var fieldsOfStudy = FieldsOfStudy.from(fieldOfStudyName);
@@ -30,8 +30,8 @@ class EnrollStudentCommandTest {
                 Set.of(new TestResult(fieldOfStudyName, Score.fromPercentage(90))),
                 PERSONAL_DATA
         ));
-        facultyRepository.create(institutionId, new FacultyView(
-                facultyId, facultyName, fieldsOfStudy, Set.of(), new Vacancies(1), Set.of(), new Vacancies(10)
+        var facultyId = facultyRepository.saveNew(institutionId, new NewFacultyView(
+                facultyName, fieldsOfStudy, new Vacancies(1), new Vacancies(10)
         ));
 
         var result = command.getHandler(injector)
@@ -49,7 +49,6 @@ class EnrollStudentCommandTest {
     @Test
     void handleDomainErrorForStudentEnrollmentCommand() {
         var institutionId = UUID.randomUUID();
-        var facultyId = UUID.randomUUID();
         var facultyName = "Mathematics";
         var fieldOfStudyName = "math";
         var fieldsOfStudy = FieldsOfStudy.from(fieldOfStudyName);
@@ -57,8 +56,8 @@ class EnrollStudentCommandTest {
                 Set.of(new TestResult(fieldOfStudyName, Score.fromPercentage(10))),
                 PERSONAL_DATA
         ));
-        facultyRepository.create(institutionId, new FacultyView(
-                facultyId, facultyName, fieldsOfStudy, Set.of(), new Vacancies(1), Set.of(), new Vacancies(10)
+        var facultyId = facultyRepository.saveNew(institutionId, new NewFacultyView(
+                facultyName, fieldsOfStudy, new Vacancies(1), new Vacancies(10)
         ));
 
         var result = command.getHandler(injector)
