@@ -2,6 +2,7 @@ package io.github.jonarzz.edu.domain;
 
 import lombok.experimental.*;
 
+import io.github.jonarzz.edu.domain.course.*;
 import io.github.jonarzz.edu.domain.faculty.*;
 import io.github.jonarzz.edu.domain.professor.*;
 import io.github.jonarzz.edu.domain.student.*;
@@ -9,13 +10,22 @@ import io.github.jonarzz.edu.domain.student.*;
 @FieldDefaults(makeFinal = true)
 public class FakeDomainInjector implements DomainInjector {
 
+    CourseConfiguration courseConfiguration = new FakeCourseConfiguration();
+
     FacultyConfiguration facultyConfiguration = new FakeFacultyConfiguration();
     FacultyRepository facultyRepository = new FakeFacultyRepository();
+
     ProfessorRepository professorRepository = new FakeProfessorRepository();
-    StudentRepository studentRepository = new FakeStudentRepository();
     ProfessorConfiguration professorConfiguration = new FakeProfessorConfiguration();
     ProfessorResignationListener professorResignationListener = new FakeProfessorResignationListener();
+
+    StudentRepository studentRepository = new FakeStudentRepository();
     StudentResignationListener studentResignationListener = new FakeStudentResignationListener();
+
+    @Override
+    public CourseConfiguration courseConfiguration() {
+        return courseConfiguration;
+    }
 
     @Override
     public FacultyConfiguration facultyConfiguration() {

@@ -60,7 +60,7 @@ class ProfessorTest {
             assertThat(result)
                     .as(result.toString())
                     .returns(false, Result::isOk)
-                    .returns("Not active professor cannot resign", Result::getMessage)
+                    .returns("Not active professor cannot perform actions", Result::getMessage)
                     .returns(null, Result::getSubject);
             assertThat(resignationListener.events())
                     .isEmpty();
@@ -76,16 +76,17 @@ class ProfessorTest {
                     .fieldsOfStudy(fieldsOfStudy)
                     .create();
             var courseName = "Math 101";
+            var courseData = TestValidCourseDataFactory.create(courseName, fieldsOfStudy);
 
-            var result = professor.createCourse(courseName, fieldsOfStudy);
+            var result = professor.createCourse(courseData);
 
             assertThat(result)
                     .as(result.toString())
                     .returns(true, Result::isOk)
                     .extracting(Result::getSubject)
-                    .returns(null, CourseView::id)
-                    .returns(courseName, CourseView::name)
-                    .returns(fieldsOfStudy, CourseView::fieldsOfStudy);
+                    .returns(null, Views.CourseView::id)
+                    .returns(courseName, Views.CourseView::name)
+                    .returns(fieldsOfStudy, Views.CourseView::fieldsOfStudy);
         }
 
         @Test
@@ -95,13 +96,14 @@ class ProfessorTest {
                     .active(false)
                     .create();
             var courseName = "Math 101";
+            var courseData = TestValidCourseDataFactory.create(courseName, fieldsOfStudy);
 
-            var result = professor.createCourse(courseName, fieldsOfStudy);
+            var result = professor.createCourse(courseData);
 
             assertThat(result)
                     .as(result.toString())
                     .returns(false, Result::isOk)
-                    .returns("Not active professor cannot create courses", Result::getMessage);
+                    .returns("Not active professor cannot perform actions", Result::getMessage);
         }
 
         @Test
@@ -111,8 +113,9 @@ class ProfessorTest {
                     .leadCoursesCount(DEFAULT_MAX_COURSES_COUNT)
                     .create();
             var courseName = "Math 101";
+            var courseData = TestValidCourseDataFactory.create(courseName, fieldsOfStudy);
 
-            var result = professor.createCourse(courseName, fieldsOfStudy);
+            var result = professor.createCourse(courseData);
 
             assertThat(result)
                     .as(result.toString())
@@ -129,8 +132,9 @@ class ProfessorTest {
                     .create();
             var courseName = "Quantum mechanics for dummies";
             var courseFieldsOfStudy = FieldsOfStudy.from("physics", "math", "quantum physics", "chemistry");
+            var courseData = TestValidCourseDataFactory.create(courseName, courseFieldsOfStudy);
 
-            var result = professor.createCourse(courseName, courseFieldsOfStudy);
+            var result = professor.createCourse(courseData);
 
             assertThat(result)
                     .as(result.toString())

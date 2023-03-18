@@ -1,6 +1,6 @@
 package io.github.jonarzz.edu.domain.faculty;
 
-import static java.util.stream.Collectors.*;
+import static io.github.jonarzz.edu.domain.common.TestFieldsOfStudyFactory.*;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
@@ -179,16 +179,6 @@ class FacultyProfessorsTest {
         var result = faculty.employ(candidate);
 
         assertFailure(result, "The professor is already employed");
-    }
-
-    private static FieldsOfStudy fieldsOfStudyFrom(String csv) {
-        var fieldsList = Arrays.stream(csv.split(","))
-                               .map(String::trim)
-                               .collect(toList());
-        return FieldsOfStudy.from(
-                fieldsList.get(0),
-                fieldsList.subList(1, fieldsList.size())
-        );
     }
 
     private static void assertSuccess(Result<ProfessorView> result,

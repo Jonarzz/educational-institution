@@ -58,11 +58,4 @@ public class Views {
             );
         }
     }
-
-    public record FacultyCourses(
-            UUID facultyId,
-            Set<String> courseNames
-    ) {
-
-    }
 }

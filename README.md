@@ -44,7 +44,6 @@ Professors may **create** courses within a faculty if specific rules are met:
 - all fields of study of the course match those of the professor's
 - the professor is leading no more than N courses already
 - there are at most M courses within the faculty
-- there are at most N courses with M or more fields of study matching the new course's
 
 Professors may **resign** from leading the courses.
 A notification to an external system has to be sent upon that event.

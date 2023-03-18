@@ -38,7 +38,7 @@ class FacultyProfessors {
     Result<ProfessorView> employ(CandidateForProfessor candidate) {
         return employmentRules()
                 .map(rule -> rule.calculateViolation(candidate))
-                .<Result<ProfessorView>>flatMap(Optional::stream)
+                .flatMap(Optional::stream)
                 .findFirst()
                 .orElseGet(() -> new Created<>(newProfessor(
                         candidate.personIdentification(),
@@ -57,13 +57,13 @@ class FacultyProfessors {
 
     private interface ProfessorEmploymentRule {
 
-        Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate);
+        Optional<Result<ProfessorView>> calculateViolation(CandidateForProfessor candidate);
     }
 
     private class DuplicatePreventingRule implements ProfessorEmploymentRule {
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
+        public Optional<Result<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
             // TODO take 'active' flag into account
             if (alreadyEmployed(candidate)) {
                 return Optional.of(new RuleViolated<>("The professor is already employed"));
@@ -83,7 +83,7 @@ class FacultyProfessors {
     private class VacancyRule implements ProfessorEmploymentRule {
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
+        public Optional<Result<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
             if (employedProfessorIds.size() == maxVacancies.count()) {
                 return Optional.of(
                         new RuleViolated<>("There is no vacancy")
@@ -96,7 +96,7 @@ class FacultyProfessors {
     private record YearsOfExperienceRule(FacultyConfiguration config) implements ProfessorEmploymentRule {
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
+        public Optional<Result<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
             var candidateExperience = candidate.yearsOfExperience();
             var minExperience = config.professorCandidate()
                                       .minimumYearsOfExperience();
@@ -117,7 +117,7 @@ class FacultyProfessors {
         FacultyConfiguration config;
 
         @Override
-        public Optional<RuleViolated<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
+        public Optional<Result<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
             var candidateFieldsOfStudy = candidate.fieldsOfStudy();
             var matchingCount = fieldsOfStudy.countMatching(candidateFieldsOfStudy);
             if (matchingCount == fieldsOfStudy.count()) {

@@ -38,7 +38,7 @@ class FacultyStudents {
     Result<StudentView> enroll(CandidateForStudent candidate) {
         return enrollmentRules()
                 .map(rule -> rule.calculateViolation(candidate))
-                .<Result<StudentView>>flatMap(Optional::stream)
+                .flatMap(Optional::stream)
                 .findFirst()
                 .orElseGet(() -> new Created<>(newStudent(
                         candidate.personIdentification()
@@ -56,13 +56,13 @@ class FacultyStudents {
 
     private interface StudentEnrollmentRule {
 
-        Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate);
+        Optional<Result<StudentView>> calculateViolation(CandidateForStudent candidate);
     }
 
     private class MainFieldOfStudyScoreRule implements StudentEnrollmentRule {
 
         @Override
-        public Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate) {
+        public Optional<Result<StudentView>> calculateViolation(CandidateForStudent candidate) {
             var score = candidate.getScoreFor(fieldsOfStudy.main());
             var minimumScore = config.studentCandidate()
                                      .mainFieldOfStudyMinimumScorePercentage();
@@ -80,7 +80,7 @@ class FacultyStudents {
     private class SecondaryFieldOfStudyScoreRule implements StudentEnrollmentRule {
 
         @Override
-        public Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate) {
+        public Optional<Result<StudentView>> calculateViolation(CandidateForStudent candidate) {
             var minimumScore = config.studentCandidate()
                                      .secondaryFieldOfStudyMinimumScorePercentage();
             var fieldsOfStudyWithNotEnoughScore =
@@ -104,7 +104,7 @@ class FacultyStudents {
     private class DuplicatePreventingRule implements StudentEnrollmentRule {
 
         @Override
-        public Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate) {
+        public Optional<Result<StudentView>> calculateViolation(CandidateForStudent candidate) {
             if (alreadyEmployed(candidate)) {
                 return Optional.of(new RuleViolated<>("The student is already enrolled"));
             }
@@ -123,7 +123,7 @@ class FacultyStudents {
     private class VacancyRule implements StudentEnrollmentRule {
 
         @Override
-        public Optional<RuleViolated<StudentView>> calculateViolation(CandidateForStudent candidate) {
+        public Optional<Result<StudentView>> calculateViolation(CandidateForStudent candidate) {
             if (enrolledStudentIds.size() == maxStudentVacancies.count()) {
                 return Optional.of(
                         new RuleViolated<>("There is no vacancy")

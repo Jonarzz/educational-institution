@@ -1,6 +1,6 @@
 package io.github.jonarzz.edu.domain.professor;
 
-import static io.github.jonarzz.edu.domain.course.CourseView.*;
+import static io.github.jonarzz.edu.domain.course.Views.CourseView.*;
 import static java.lang.String.*;
 
 import lombok.*;
@@ -8,10 +8,12 @@ import lombok.experimental.*;
 import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
 
 import java.util.*;
+import java.util.function.*;
 
 import io.github.jonarzz.edu.api.result.*;
 import io.github.jonarzz.edu.domain.common.*;
 import io.github.jonarzz.edu.domain.course.*;
+import io.github.jonarzz.edu.domain.course.Views.*;
 
 @AggregateRoot
 @RequiredArgsConstructor
@@ -28,28 +30,32 @@ class Professor {
     ProfessorResignationListener resignationListener;
 
     Result<ProfessorView> resign(String reason) {
-        if (!active) {
-            return new RuleViolated<>("Not active professor cannot resign");
-        }
-        var inactiveProfessor = ProfessorView.inactive(toView());
-        resignationListener.onProfessorResignation(inactiveProfessor, reason);
-        return new Done<>(inactiveProfessor);
+        return new OnActiveProfessor<ProfessorView>()
+                .act(() -> {
+                    var inactiveProfessor = ProfessorView.inactive(toView());
+                    resignationListener.onProfessorResignation(inactiveProfessor, reason);
+                    return new Done<>(inactiveProfessor);
+                });
     }
 
-    Result<CourseView> createCourse(String name, FieldsOfStudy fieldsOfStudy) {
-        if (!active) {
-            return new RuleViolated<>("Not active professor cannot create courses");
-        }
-        if (leadCoursesCount == config.maximumLeadCoursesCount()) {
-            return new RuleViolated<>("Professor cannot lead more than " + leadCoursesCount + " courses");
-        }
-        var mismatchedFieldsOfStudy = fieldsOfStudy.diff(this.fieldsOfStudy);
-        if (!mismatchedFieldsOfStudy.isEmpty()) {
-            return new RuleViolated<>("Professor cannot create a course without required qualifications: "
-                                      + join(", ", mismatchedFieldsOfStudy));
-        }
-        // TODO add faculty-related rules (FacultyCourses) + split view into 2 records?
-        return new Created<>(newCourse(name, fieldsOfStudy));
+    Result<CourseView> createCourse(ValidCourseData courseData) {
+        return new OnActiveProfessor<CourseView>()
+                .act(() -> {
+                    if (leadCoursesCount == config.maximumLeadCoursesCount()) {
+                        return new RuleViolated<>(
+                                "Professor cannot lead more than " + leadCoursesCount + " courses"
+                        );
+                    }
+                    var mismatchedFieldsOfStudy = courseData.fieldsOfStudy()
+                                                            .diff(fieldsOfStudy);
+                    if (!mismatchedFieldsOfStudy.isEmpty()) {
+                        return new RuleViolated<>(
+                                "Professor cannot create a course without required qualifications: "
+                                + join(", ", mismatchedFieldsOfStudy)
+                        );
+                    }
+                    return new Created<>(newCourse(courseData, id));
+                });
     }
 
     private ProfessorView toView() {
@@ -60,5 +66,15 @@ class Professor {
                 leadCoursesCount,
                 active
         );
+    }
+
+    private class OnActiveProfessor<R> {
+
+        private Result<R> act(Supplier<Result<R>> action) {
+            if (!active) {
+                return new RuleViolated<>("Not active professor cannot perform actions");
+            }
+            return action.get();
+        }
     }
 }
