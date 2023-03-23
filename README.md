@@ -31,7 +31,7 @@ A notification to an external system has to be sent upon that event.
 ### Student :white_check_mark:
 Students may be **enrolled** if specific rules are met:
 - there is a vacancy in the faculty
-- student scored at least N% of points in tests for the **main fields of study**
+- student scored at least N% of points in tests for the **main field of study**
 - student scored at least M% of points in tests for the **secondary fields of study**
 
 Students may **resign**.
