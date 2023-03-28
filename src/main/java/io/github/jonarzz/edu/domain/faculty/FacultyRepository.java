@@ -1,19 +1,20 @@
 package io.github.jonarzz.edu.domain.faculty;
 
-import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
-
-import java.util.*;
-
-import io.github.jonarzz.edu.domain.faculty.Views.*;
+import io.github.jonarzz.edu.domain.faculty.Views.FacultyProfessorsView;
+import io.github.jonarzz.edu.domain.faculty.Views.FacultyStudentsView;
+import io.github.jonarzz.edu.domain.faculty.Views.NewFacultyView;
+import java.util.Set;
+import java.util.UUID;
+import org.jqassistant.contrib.plugin.ddd.annotation.DDD.Repository;
 
 @Repository
 public interface FacultyRepository {
 
     Set<String> getAllFacultyNames(UUID institutionId);
 
-    FacultyProfessorsView getFacultyProfessors(UUID institutionId, String facultyName);
+    FacultyProfessorsView getFacultyProfessors(FacultyId facultyId);
 
-    FacultyStudentsView getFacultyStudents(UUID institutionId, String facultyName);
+    FacultyStudentsView getFacultyStudents(FacultyId facultyId);
 
-    UUID saveNew(UUID institutionId, NewFacultyView faculty);
+    FacultyId saveNew(UUID institutionId, NewFacultyView faculty);
 }

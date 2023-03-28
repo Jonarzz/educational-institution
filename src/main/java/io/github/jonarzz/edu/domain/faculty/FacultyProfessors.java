@@ -1,17 +1,20 @@
 package io.github.jonarzz.edu.domain.faculty;
 
-import static io.github.jonarzz.edu.domain.professor.ProfessorView.*;
+import static io.github.jonarzz.edu.domain.professor.ProfessorView.newProfessor;
 
-import lombok.*;
-import lombok.experimental.*;
-import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
-
-import java.util.*;
-import java.util.stream.*;
-
-import io.github.jonarzz.edu.api.result.*;
-import io.github.jonarzz.edu.domain.common.*;
-import io.github.jonarzz.edu.domain.professor.*;
+import io.github.jonarzz.edu.api.result.Created;
+import io.github.jonarzz.edu.api.result.Result;
+import io.github.jonarzz.edu.api.result.RuleViolated;
+import io.github.jonarzz.edu.domain.common.FieldsOfStudy;
+import io.github.jonarzz.edu.domain.common.PersonIdentification;
+import io.github.jonarzz.edu.domain.common.Vacancies;
+import io.github.jonarzz.edu.domain.professor.ProfessorView;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
+import lombok.experimental.FieldDefaults;
+import org.jqassistant.contrib.plugin.ddd.annotation.DDD.AggregateRoot;
 
 @AggregateRoot
 @FieldDefaults(makeFinal = true)
@@ -50,8 +53,8 @@ class FacultyProfessors {
         return Stream.of(
                 new DuplicatePreventingRule(),
                 new VacancyRule(),
-                new YearsOfExperienceRule(config),
-                new FieldsOfStudyRule(config)
+                new YearsOfExperienceRule(),
+                new FieldsOfStudyRule()
         );
     }
 
@@ -93,7 +96,7 @@ class FacultyProfessors {
         }
     }
 
-    private record YearsOfExperienceRule(FacultyConfiguration config) implements ProfessorEmploymentRule {
+    private class YearsOfExperienceRule implements ProfessorEmploymentRule {
 
         @Override
         public Optional<Result<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {
@@ -110,11 +113,7 @@ class FacultyProfessors {
         }
     }
 
-    @RequiredArgsConstructor
-    @FieldDefaults(makeFinal = true)
     private class FieldsOfStudyRule implements ProfessorEmploymentRule {
-
-        FacultyConfiguration config;
 
         @Override
         public Optional<Result<ProfessorView>> calculateViolation(CandidateForProfessor candidate) {

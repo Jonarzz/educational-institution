@@ -4,10 +4,12 @@ import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
 
 import java.util.*;
 
+import io.github.jonarzz.edu.domain.faculty.*;
+
 @Repository
 public interface StudentRepository {
 
-    Collection<StudentView> getByFacultyId(UUID facultyId);
+    Collection<StudentView> getByFacultyId(FacultyId facultyId);
 
-    void saveNew(UUID facultyId, StudentView student);
+    void saveNew(FacultyId facultyId, StudentView student);
 }

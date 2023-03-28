@@ -1,13 +1,10 @@
 package io.github.jonarzz.edu.domain.faculty;
 
-import java.util.*;
-
 import io.github.jonarzz.edu.api.*;
 import io.github.jonarzz.edu.domain.*;
 
 public record EmployProfessorCommand(
-        UUID educationalInstitutionId,
-        String facultyName,
+        FacultyId facultyId,
         CandidateForProfessor candidate
 ) implements Command {
 

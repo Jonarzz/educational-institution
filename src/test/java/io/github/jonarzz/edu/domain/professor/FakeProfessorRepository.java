@@ -1,14 +1,14 @@
 package io.github.jonarzz.edu.domain.professor;
 
-import lombok.experimental.*;
-
-import java.util.*;
-import java.util.function.*;
-
-import io.github.jonarzz.edu.domain.test.*;
+import io.github.jonarzz.edu.domain.faculty.FacultyId;
+import io.github.jonarzz.edu.domain.test.InMemoryAggregatedEntityRepository;
+import java.util.Collection;
+import java.util.UUID;
+import java.util.function.Function;
+import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(makeFinal = true)
-public class FakeProfessorRepository extends InMemoryAggregatedEntityRepository<ProfessorView>
+public class FakeProfessorRepository extends InMemoryAggregatedEntityRepository<FacultyId, ProfessorView>
         implements ProfessorRepository {
 
     @Override
@@ -17,8 +17,19 @@ public class FakeProfessorRepository extends InMemoryAggregatedEntityRepository<
     }
 
     @Override
-    public Collection<ProfessorView> getByFacultyId(UUID facultyId) {
+    public Collection<ProfessorView> getByFaculty(FacultyId facultyId) {
         return getByAggregatingId(facultyId);
+    }
+
+    @Override
+    public ProfessorView getBy(FacultyId facultyId, UUID professorId) {
+        return getByAggregatingId(facultyId)
+                .stream()
+                .filter(professor -> professor.id()
+                                              .equals(professorId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Not found professor with ID %s within %s"
+                                                                     .formatted(professorId, facultyId)));
     }
 
     @Override
@@ -27,7 +38,7 @@ public class FakeProfessorRepository extends InMemoryAggregatedEntityRepository<
     }
 
     @Override
-    public void saveNew(UUID facultyId, ProfessorView professor) {
+    public void saveNew(FacultyId facultyId, ProfessorView professor) {
         add(facultyId, professor);
     }
 

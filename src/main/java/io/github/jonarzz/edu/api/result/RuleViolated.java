@@ -8,4 +8,9 @@ public record RuleViolated<T>(
     public String getMessage() {
         return message;
     }
+
+    @Override
+    public <M> Result<M> mapFailure() {
+        return new RuleViolated<>(message);
+    }
 }

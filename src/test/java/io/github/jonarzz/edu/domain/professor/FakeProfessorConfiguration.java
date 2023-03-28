@@ -1,7 +1,7 @@
 package io.github.jonarzz.edu.domain.professor;
 
 public record FakeProfessorConfiguration(
-        int maximumLeadCoursesCount
+        int maximumLedCoursesCount
 ) implements ProfessorConfiguration {
 
     static final int DEFAULT_MAX_COURSES_COUNT = 3;

@@ -1,23 +1,23 @@
 package io.github.jonarzz.edu.domain.student;
 
-import lombok.experimental.*;
-
-import java.util.*;
-import java.util.function.*;
-
-import io.github.jonarzz.edu.domain.test.*;
+import io.github.jonarzz.edu.domain.faculty.FacultyId;
+import io.github.jonarzz.edu.domain.test.InMemoryAggregatedEntityRepository;
+import java.util.Collection;
+import java.util.UUID;
+import java.util.function.Function;
+import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(makeFinal = true)
-public class FakeStudentRepository  extends InMemoryAggregatedEntityRepository<StudentView>
+public class FakeStudentRepository extends InMemoryAggregatedEntityRepository<FacultyId, StudentView>
         implements StudentRepository {
 
     @Override
-    public Collection<StudentView> getByFacultyId(UUID facultyId) {
+    public Collection<StudentView> getByFacultyId(FacultyId facultyId) {
         return getByAggregatingId(facultyId);
     }
 
     @Override
-    public void saveNew(UUID facultyId, StudentView student) {
+    public void saveNew(FacultyId facultyId, StudentView student) {
         add(facultyId, student);
     }
 

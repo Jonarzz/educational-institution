@@ -11,12 +11,13 @@ import io.github.jonarzz.edu.domain.student.*;
 public class FakeDomainInjector implements DomainInjector {
 
     CourseConfiguration courseConfiguration = new FakeCourseConfiguration();
+    FakeCourseRepository courseRepository = new FakeCourseRepository();
 
     FacultyConfiguration facultyConfiguration = new FakeFacultyConfiguration();
     FacultyRepository facultyRepository = new FakeFacultyRepository();
 
-    ProfessorRepository professorRepository = new FakeProfessorRepository();
     ProfessorConfiguration professorConfiguration = new FakeProfessorConfiguration();
+    ProfessorRepository professorRepository = new FakeProfessorRepository();
     ProfessorResignationListener professorResignationListener = new FakeProfessorResignationListener();
 
     StudentRepository studentRepository = new FakeStudentRepository();
@@ -25,6 +26,11 @@ public class FakeDomainInjector implements DomainInjector {
     @Override
     public CourseConfiguration courseConfiguration() {
         return courseConfiguration;
+    }
+
+    @Override
+    public CourseRepository courseRepository() {
+        return courseRepository;
     }
 
     @Override

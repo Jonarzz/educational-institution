@@ -1,16 +1,21 @@
 package io.github.jonarzz.edu.domain.test;
 
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PROTECTED;
 
-import lombok.experimental.*;
-
-import java.util.*;
-import java.util.function.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = PROTECTED, makeFinal = true)
-public abstract class InMemoryAggregatedEntityRepository<V> {
+public abstract class InMemoryAggregatedEntityRepository<K, V> {
 
-    Map<UUID, Collection<V>> entitiesByAggregatingId = new HashMap<>();
+    Map<K, Collection<V>> entitiesByAggregatingId = new HashMap<>();
 
     protected abstract Function<V, UUID> aggregatedEntityIdGetter();
 
@@ -25,11 +30,11 @@ public abstract class InMemoryAggregatedEntityRepository<V> {
                                                                                    + aggregatedEntityId));
     }
 
-    protected Collection<V> getByAggregatingId(UUID aggregatingId) {
+    protected Collection<V> getByAggregatingId(K aggregatingId) {
         return entitiesByAggregatingId.getOrDefault(aggregatingId, Set.of());
     }
 
-    protected V firstMatching(UUID aggregatingId, Predicate<V> predicate) {
+    protected V firstMatching(K aggregatingId, Predicate<V> predicate) {
         return getByAggregatingId(aggregatingId)
                 .stream()
                 .filter(predicate)
@@ -49,7 +54,7 @@ public abstract class InMemoryAggregatedEntityRepository<V> {
         }
     }
 
-    protected void add(UUID aggregatingId, V object) {
+    protected void add(K aggregatingId, V object) {
         entitiesByAggregatingId.computeIfAbsent(
                 aggregatingId,
                 id -> new HashSet<>()

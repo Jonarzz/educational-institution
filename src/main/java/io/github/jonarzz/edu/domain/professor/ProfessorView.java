@@ -1,10 +1,9 @@
 package io.github.jonarzz.edu.domain.professor;
 
-import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
-
-import java.util.*;
-
-import io.github.jonarzz.edu.domain.common.*;
+import io.github.jonarzz.edu.domain.common.FieldsOfStudy;
+import io.github.jonarzz.edu.domain.common.PersonIdentification;
+import java.util.UUID;
+import org.jqassistant.contrib.plugin.ddd.annotation.DDD.ValueObject;
 
 @ValueObject
 public record ProfessorView(
@@ -33,14 +32,18 @@ public record ProfessorView(
             PersonIdentification personIdentification,
             FieldsOfStudy fieldsOfStudy
     ) {
-        return new ProfessorView(null, personIdentification, fieldsOfStudy);
+        return new ProfessorView(UUID.randomUUID(), personIdentification, fieldsOfStudy);
     }
 
-    public static ProfessorView inactive(ProfessorView subject) {
+    public ProfessorView inactive() {
         return new ProfessorView(
-                subject.id, subject.personIdentification, subject.fieldsOfStudy, subject.leadCoursesCount,
+                id, personIdentification, fieldsOfStudy, leadCoursesCount,
                 false
         );
+    }
+
+    Professor toDomainObject(ProfessorConfiguration config) {
+        return toDomainObject(config, null);
     }
 
     Professor toDomainObject(

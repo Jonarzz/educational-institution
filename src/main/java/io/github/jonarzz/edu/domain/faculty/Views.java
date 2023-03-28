@@ -22,7 +22,7 @@ public class Views {
     }
 
     public record FacultyProfessorsView(
-            UUID facultyId,
+            FacultyId facultyId,
             FieldsOfStudy fieldsOfStudy,
             Collection<ProfessorView> employedProfessors,
             Vacancies maxProfessorVacancies
@@ -41,7 +41,7 @@ public class Views {
     }
 
     public record FacultyStudentsView(
-            UUID facultyId,
+            FacultyId facultyId,
             FieldsOfStudy fieldsOfStudy,
             Collection<StudentView> enrolledStudents,
             Vacancies maxStudentVacancies

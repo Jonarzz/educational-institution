@@ -1,14 +1,14 @@
 package io.github.jonarzz.edu.domain.professor;
 
-import static io.github.jonarzz.edu.domain.professor.ProfessorView.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.*;
-
-import java.util.*;
-
-import io.github.jonarzz.edu.domain.*;
-import io.github.jonarzz.edu.domain.common.*;
+import io.github.jonarzz.edu.domain.DomainInjector;
+import io.github.jonarzz.edu.domain.FakeDomainInjector;
+import io.github.jonarzz.edu.domain.common.FieldsOfStudy;
+import io.github.jonarzz.edu.domain.common.PersonIdentification;
+import io.github.jonarzz.edu.domain.faculty.FacultyId;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
 
 class ProfessorResignationCommandTest {
 
@@ -17,7 +17,7 @@ class ProfessorResignationCommandTest {
 
     @Test
     void successfullyHandleProfessorResignationCommand() {
-        var facultyId = UUID.randomUUID();
+        var facultyId = new FacultyId(UUID.randomUUID(), "Faculty name");
         var professorId = UUID.randomUUID();
         var resignationReason = "Personal reasons";
         var command = new ProfessorResignationCommand(professorId, resignationReason);
@@ -33,24 +33,23 @@ class ProfessorResignationCommandTest {
         assertThat(result.isOk())
                 .as(result.toString())
                 .isTrue();
-        assertThat(professorRepository.getByFacultyId(facultyId))
-                .singleElement()
+        assertThat(professorRepository.getBy(facultyId, professorId))
                 .returns(professorId, ProfessorView::id)
                 .returns(false, ProfessorView::active);
     }
 
     @Test
     void handleDomainErrorForProfessorResignationCommand() {
-        var facultyId = UUID.randomUUID();
+        var facultyId = new FacultyId(UUID.randomUUID(), "Faculty name");
         var professorId = UUID.randomUUID();
         var active = false;
         var resignationReason = "Personal reasons";
         var command = new ProfessorResignationCommand(professorId, resignationReason);
-        var professorBeforeHandling = inactive(new ProfessorView(
+        var professorBeforeHandling = new ProfessorView(
                 professorId,
                 new PersonIdentification("5021515AB35"),
                 FieldsOfStudy.from("math")
-        ));
+        ).inactive();
         professorRepository.saveNew(facultyId, professorBeforeHandling);
 
         var result = command.getHandler(injector)
@@ -59,7 +58,7 @@ class ProfessorResignationCommandTest {
         assertThat(result.isOk())
                 .as(result.toString())
                 .isFalse();
-        assertThat(professorRepository.getByFacultyId(facultyId))
+        assertThat(professorRepository.getByFaculty(facultyId))
                 .singleElement()
                 .isEqualTo(professorBeforeHandling);
     }

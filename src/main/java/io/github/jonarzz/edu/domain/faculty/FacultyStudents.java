@@ -1,17 +1,21 @@
 package io.github.jonarzz.edu.domain.faculty;
 
-import static io.github.jonarzz.edu.domain.student.StudentView.*;
-import static java.util.stream.Collectors.*;
+import static io.github.jonarzz.edu.domain.student.StudentView.newStudent;
+import static java.util.stream.Collectors.joining;
 
-import lombok.experimental.*;
-import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
-
-import java.util.*;
-import java.util.stream.*;
-
-import io.github.jonarzz.edu.api.result.*;
-import io.github.jonarzz.edu.domain.common.*;
-import io.github.jonarzz.edu.domain.student.*;
+import io.github.jonarzz.edu.api.result.Created;
+import io.github.jonarzz.edu.api.result.Result;
+import io.github.jonarzz.edu.api.result.RuleViolated;
+import io.github.jonarzz.edu.domain.common.FieldsOfStudy;
+import io.github.jonarzz.edu.domain.common.PersonIdentification;
+import io.github.jonarzz.edu.domain.common.Vacancies;
+import io.github.jonarzz.edu.domain.student.StudentView;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
+import lombok.experimental.FieldDefaults;
+import org.jqassistant.contrib.plugin.ddd.annotation.DDD.AggregateRoot;
 
 @AggregateRoot
 @FieldDefaults(makeFinal = true)
@@ -35,6 +39,7 @@ class FacultyStudents {
         this.config = config;
     }
 
+    // TODO Either
     Result<StudentView> enroll(CandidateForStudent candidate) {
         return enrollmentRules()
                 .map(rule -> rule.calculateViolation(candidate))
@@ -105,13 +110,13 @@ class FacultyStudents {
 
         @Override
         public Optional<Result<StudentView>> calculateViolation(CandidateForStudent candidate) {
-            if (alreadyEmployed(candidate)) {
+            if (alreadyEnrolled(candidate)) {
                 return Optional.of(new RuleViolated<>("The student is already enrolled"));
             }
             return Optional.empty();
         }
 
-        private boolean alreadyEmployed(CandidateForStudent candidate) {
+        private boolean alreadyEnrolled(CandidateForStudent candidate) {
             var candidateNationalId = candidate.personIdentification()
                                                .nationalIdNumber();
             return enrolledStudentIds.stream()

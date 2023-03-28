@@ -19,9 +19,7 @@ class EmployProfessorCommandHandler implements CommandHandler<EmployProfessorCom
 
     @Override
     public Result<ProfessorView> handle(EmployProfessorCommand command) {
-        var institutionId = command.educationalInstitutionId();
-        var facultyName = command.facultyName();
-        var professorsView = facultyRepository.getFacultyProfessors(institutionId, facultyName);
+        var professorsView = facultyRepository.getFacultyProfessors(command.facultyId());
         var facultyProfessors = professorsView.toDomainObject(facultyConfiguration);
         var result = facultyProfessors.employ(command.candidate());
         if (result.isOk()) {

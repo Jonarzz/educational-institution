@@ -15,7 +15,6 @@ public class CourseFactory {
 
     CourseConfiguration config;
 
-    // TODO command + handler
     public Result<ValidCourseData> prepareCourse(FacultyCoursesView existingFacultyCourses,
                                                  String name, FieldsOfStudy fieldsOfStudy) {
         var existingCoursesCount = existingFacultyCourses.count();

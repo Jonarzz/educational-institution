@@ -1,19 +1,21 @@
 package io.github.jonarzz.edu.domain.faculty;
 
-import static io.github.jonarzz.edu.domain.faculty.FakeFacultyRepository.*;
-import static io.github.jonarzz.edu.domain.faculty.Views.*;
-import static java.util.stream.Collectors.*;
+import static io.github.jonarzz.edu.domain.faculty.FakeFacultyRepository.FacultyEntity;
+import static io.github.jonarzz.edu.domain.faculty.Views.FacultyProfessorsView;
+import static io.github.jonarzz.edu.domain.faculty.Views.FacultyStudentsView;
+import static io.github.jonarzz.edu.domain.faculty.Views.NewFacultyView;
+import static java.util.stream.Collectors.toSet;
 
-import lombok.experimental.*;
-
-import java.util.*;
-import java.util.function.*;
-
-import io.github.jonarzz.edu.domain.common.*;
-import io.github.jonarzz.edu.domain.test.*;
+import io.github.jonarzz.edu.domain.common.FieldsOfStudy;
+import io.github.jonarzz.edu.domain.common.Vacancies;
+import io.github.jonarzz.edu.domain.test.InMemoryAggregatedEntityRepository;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
+import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(makeFinal = true)
-public class FakeFacultyRepository extends InMemoryAggregatedEntityRepository<FacultyEntity>
+public class FakeFacultyRepository extends InMemoryAggregatedEntityRepository<UUID, FacultyEntity>
         implements FacultyRepository {
 
     @Override
@@ -25,10 +27,10 @@ public class FakeFacultyRepository extends InMemoryAggregatedEntityRepository<Fa
     }
 
     @Override
-    public FacultyProfessorsView getFacultyProfessors(UUID institutionId, String facultyName) {
-        var faculty = firstMatching(institutionId, facultyName);
+    public FacultyProfessorsView getFacultyProfessors(FacultyId facultyId) {
+        var faculty = firstMatching(facultyId);
         return new FacultyProfessorsView(
-                faculty.id(),
+                facultyId,
                 faculty.fieldsOfStudy(),
                 Set.of(),
                 faculty.maxProfessorVacancies()
@@ -36,10 +38,10 @@ public class FakeFacultyRepository extends InMemoryAggregatedEntityRepository<Fa
     }
 
     @Override
-    public FacultyStudentsView getFacultyStudents(UUID institutionId, String facultyName) {
-        var faculty = firstMatching(institutionId, facultyName);
+    public FacultyStudentsView getFacultyStudents(FacultyId facultyId) {
+        var faculty = firstMatching(facultyId);
         return new FacultyStudentsView(
-                faculty.id(),
+                facultyId,
                 faculty.fieldsOfStudy(),
                 Set.of(),
                 faculty.maxStudentVacancies()
@@ -47,16 +49,15 @@ public class FakeFacultyRepository extends InMemoryAggregatedEntityRepository<Fa
     }
 
     @Override
-    public UUID saveNew(UUID institutionId, NewFacultyView faculty) {
-        var facultyId = UUID.randomUUID();
+    public FacultyId saveNew(UUID institutionId, NewFacultyView faculty) {
         add(institutionId, new FacultyEntity(
-                facultyId,
+                UUID.randomUUID(),
                 faculty.name(),
                 faculty.fieldsOfStudy(),
                 faculty.maxProfessorVacancies(),
                 faculty.maxStudentVacancies()
         ));
-        return facultyId;
+        return new FacultyId(institutionId, faculty.name());
     }
 
     @Override
@@ -64,9 +65,10 @@ public class FakeFacultyRepository extends InMemoryAggregatedEntityRepository<Fa
         return FacultyEntity::id;
     }
 
-    private FacultyEntity firstMatching(UUID institutionId, String facultyName) {
-        return firstMatching(institutionId, faculty -> faculty.name()
-                                                              .equals(facultyName));
+    private FacultyEntity firstMatching(FacultyId facultyId) {
+        return firstMatching(facultyId.institutionId(),
+                             faculty -> faculty.name()
+                                               .equals(facultyId.facultyName()));
     }
 
     record FacultyEntity(

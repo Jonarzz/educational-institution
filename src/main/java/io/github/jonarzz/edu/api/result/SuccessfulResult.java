@@ -7,4 +7,9 @@ public interface SuccessfulResult<T> extends Result<T> {
         return true;
     }
 
+    @Override
+    default <M> Result<M> mapFailure() {
+        throw new IllegalStateException("Result is successful - cannot map as failure");
+    }
+
 }

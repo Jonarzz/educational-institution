@@ -25,7 +25,7 @@ class EmployProfessorCommandTest {
         var institutionId = UUID.randomUUID();
         var facultyName = "Mathematics";
         var fieldsOfStudy = FieldsOfStudy.from("math");
-        var command = new EmployProfessorCommand(institutionId, facultyName, new CandidateForProfessor(
+        var command = new EmployProfessorCommand(new FacultyId(institutionId, facultyName), new CandidateForProfessor(
                 DEFAULT_MIN_PROF_YEARS_OF_EXPERIENCE, fieldsOfStudy, PERSONAL_DATA
         ));
         var facultyId = facultyRepository.saveNew(institutionId, new NewFacultyView(
@@ -38,10 +38,9 @@ class EmployProfessorCommandTest {
         assertThat(result.isOk())
                 .as(result.toString())
                 .isTrue();
-        assertThat(professorRepository.getByFacultyId(facultyId))
-                .filteredOn(ProfessorView::personIdentification, PERSONAL_DATA)
+        assertThat(professorRepository.getBy(facultyId, result.getSubject().id()))
                 .as("New professor")
-                .hasSize(1);
+                .returns(PERSONAL_DATA, ProfessorView::personIdentification);
     }
 
     @Test
@@ -50,7 +49,7 @@ class EmployProfessorCommandTest {
         var facultyName = "Mathematics";
         var fieldsOfStudy = FieldsOfStudy.from("math");
         var yearsOfExperience = DEFAULT_MIN_PROF_YEARS_OF_EXPERIENCE / 2;
-        var command = new EmployProfessorCommand(institutionId, facultyName, new CandidateForProfessor(
+        var command = new EmployProfessorCommand(new FacultyId(institutionId, facultyName), new CandidateForProfessor(
                 yearsOfExperience, fieldsOfStudy, PERSONAL_DATA
         ));
         var facultyId = facultyRepository.saveNew(institutionId, new NewFacultyView(
@@ -63,7 +62,7 @@ class EmployProfessorCommandTest {
         assertThat(result.isOk())
                 .as(result.toString())
                 .isFalse();
-        assertThat(professorRepository.getByFacultyId(facultyId))
+        assertThat(professorRepository.getByFaculty(facultyId))
                 .as("Employed professors")
                 .isEmpty();
     }

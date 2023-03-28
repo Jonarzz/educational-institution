@@ -26,7 +26,7 @@ class EnrollStudentCommandTest {
         var facultyName = "Mathematics";
         var fieldOfStudyName = "math";
         var fieldsOfStudy = FieldsOfStudy.from(fieldOfStudyName);
-        var command = new EnrollStudentCommand(institutionId, facultyName, new CandidateForStudent(
+        var command = new EnrollStudentCommand(new FacultyId(institutionId, facultyName), new CandidateForStudent(
                 Set.of(new TestResult(fieldOfStudyName, Score.fromPercentage(90))),
                 PERSONAL_DATA
         ));
@@ -52,7 +52,7 @@ class EnrollStudentCommandTest {
         var facultyName = "Mathematics";
         var fieldOfStudyName = "math";
         var fieldsOfStudy = FieldsOfStudy.from(fieldOfStudyName);
-        var command = new EnrollStudentCommand(institutionId, facultyName, new CandidateForStudent(
+        var command = new EnrollStudentCommand(new FacultyId(institutionId, facultyName), new CandidateForStudent(
                 Set.of(new TestResult(fieldOfStudyName, Score.fromPercentage(10))),
                 PERSONAL_DATA
         ));

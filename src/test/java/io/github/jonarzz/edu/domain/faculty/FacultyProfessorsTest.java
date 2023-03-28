@@ -2,6 +2,7 @@ package io.github.jonarzz.edu.domain.faculty;
 
 import static io.github.jonarzz.edu.domain.common.TestFieldsOfStudyFactory.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
@@ -187,7 +188,7 @@ class FacultyProfessorsTest {
                 .as(result.toString())
                 .returns(true, Result::isOk)
                 .extracting(Result::getSubject)
-                .returns(null, ProfessorView::id)
+                .satisfies(professor -> assertNotNull(professor.id()))
                 .returns(true, ProfessorView::active)
                 .returns(PERSONAL_DATA, ProfessorView::personIdentification)
                 .returns(expectedFieldsOfStudy, ProfessorView::fieldsOfStudy);

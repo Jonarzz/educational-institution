@@ -1,6 +1,6 @@
 package io.github.jonarzz.edu.api.result;
 
-public record AlreadyExists<T>(
+public record NotFound<T>(
         String entityName,
         String identifyingField,
         Object fieldValue
@@ -8,22 +8,16 @@ public record AlreadyExists<T>(
 
     @Override
     public String getMessage() {
-        return "%s with %s '%s' already exists".formatted(
-                capitalize(entityName), identifyingField, fieldValue);
+        return "Not found %s with %s '%s'".formatted(
+                entityName.toLowerCase(), identifyingField, fieldValue);
     }
 
     @Override
     public <M> Result<M> mapFailure() {
-        return new AlreadyExists<>(
+        return new NotFound<>(
                 entityName,
                 identifyingField,
                 fieldValue
         );
-    }
-
-    private static String capitalize(String value) {
-        return value.substring(0, 1)
-                    .toUpperCase()
-               + value.substring(1);
     }
 }

@@ -9,6 +9,8 @@ public interface DomainInjector {
 
     CourseConfiguration courseConfiguration();
 
+    CourseRepository courseRepository();
+
     FacultyConfiguration facultyConfiguration();
 
     FacultyRepository facultyRepository();

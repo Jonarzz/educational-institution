@@ -1,17 +1,21 @@
 package io.github.jonarzz.edu.domain.professor;
 
-import static io.github.jonarzz.edu.domain.professor.FakeProfessorConfiguration.*;
-import static org.assertj.core.api.Assertions.*;
+import static io.github.jonarzz.edu.domain.professor.FakeProfessorConfiguration.DEFAULT_MAX_COURSES_COUNT;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import lombok.*;
-import org.junit.jupiter.api.*;
-
-import java.util.*;
-
-import io.github.jonarzz.edu.api.result.*;
-import io.github.jonarzz.edu.domain.common.*;
-import io.github.jonarzz.edu.domain.course.*;
-import io.github.jonarzz.edu.domain.professor.FakeProfessorResignationListener.*;
+import io.github.jonarzz.edu.api.result.Result;
+import io.github.jonarzz.edu.domain.common.FieldsOfStudy;
+import io.github.jonarzz.edu.domain.common.PersonIdentification;
+import io.github.jonarzz.edu.domain.course.TestValidCourseDataFactory;
+import io.github.jonarzz.edu.domain.course.Views;
+import io.github.jonarzz.edu.domain.professor.FakeProfessorResignationListener.Event;
+import java.util.Optional;
+import java.util.UUID;
+import lombok.Builder;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ProfessorTest {
 
@@ -106,11 +110,12 @@ class ProfessorTest {
                     .returns("Not active professor cannot perform actions", Result::getMessage);
         }
 
-        @Test
-        void failure_alreadyLeadsMaxNumberOfCourses() {
+        @ParameterizedTest
+        @ValueSource(ints = {DEFAULT_MAX_COURSES_COUNT, DEFAULT_MAX_COURSES_COUNT + 1})
+        void failure_alreadyLeadsMaxNumberOfCourses(int ledCoursesCount) {
             var professor = professor()
                     .fieldsOfStudy(fieldsOfStudy)
-                    .leadCoursesCount(DEFAULT_MAX_COURSES_COUNT)
+                    .ledCoursesCount(ledCoursesCount)
                     .create();
             var courseName = "Math 101";
             var courseData = TestValidCourseDataFactory.create(courseName, fieldsOfStudy);
@@ -149,10 +154,10 @@ class ProfessorTest {
             buildMethodName = "create"
     )
     @SuppressWarnings("unused") // used by Lombok builder
-    private Professor createProfessor(FieldsOfStudy fieldsOfStudy, int leadCoursesCount, Boolean active) {
+    private Professor createProfessor(FieldsOfStudy fieldsOfStudy, int ledCoursesCount, Boolean active) {
         return new Professor(
                 professorId, professorPersonalId,
-                fieldsOfStudy, leadCoursesCount,
+                fieldsOfStudy, ledCoursesCount,
                 Optional.ofNullable(active)
                         .orElse(true),
                 config, resignationListener

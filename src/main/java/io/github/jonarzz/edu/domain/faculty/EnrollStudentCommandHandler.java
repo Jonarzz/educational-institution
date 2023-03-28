@@ -1,12 +1,12 @@
 package io.github.jonarzz.edu.domain.faculty;
 
-import lombok.*;
-import lombok.experimental.*;
-import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
-
-import io.github.jonarzz.edu.api.*;
-import io.github.jonarzz.edu.api.result.*;
-import io.github.jonarzz.edu.domain.student.*;
+import io.github.jonarzz.edu.api.CommandHandler;
+import io.github.jonarzz.edu.api.result.Result;
+import io.github.jonarzz.edu.domain.student.StudentRepository;
+import io.github.jonarzz.edu.domain.student.StudentView;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.jqassistant.contrib.plugin.ddd.annotation.DDD.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +19,7 @@ class EnrollStudentCommandHandler implements CommandHandler<EnrollStudentCommand
 
     @Override
     public Result<StudentView> handle(EnrollStudentCommand command) {
-        var institutionId = command.educationalInstitutionId();
-        var facultyName = command.facultyName();
-        var studentsView = facultyRepository.getFacultyStudents(institutionId, facultyName);
+        var studentsView = facultyRepository.getFacultyStudents(command.facultyId());
         var facultyStudents = studentsView.toDomainObject(facultyConfiguration);
         var result = facultyStudents.enroll(command.candidate());
         if (result.isOk()) {

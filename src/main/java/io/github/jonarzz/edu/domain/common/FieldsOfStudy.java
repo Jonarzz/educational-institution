@@ -1,15 +1,17 @@
 package io.github.jonarzz.edu.domain.common;
 // TODO split into appropriate packages when the boundaries are clearer
 
-import static java.util.function.Predicate.*;
-import static java.util.stream.Collectors.*;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.joining;
 
-import lombok.*;
-import lombok.experimental.*;
-import org.jqassistant.contrib.plugin.ddd.annotation.DDD.*;
-
-import java.util.*;
-import java.util.stream.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+import org.jqassistant.contrib.plugin.ddd.annotation.DDD.ValueObject;
 
 @ValueObject
 @EqualsAndHashCode
@@ -45,13 +47,13 @@ public class FieldsOfStudy {
     }
 
     public int countMatching(FieldsOfStudy other) {
-        return (int) asStream(other)
-                .filter(this::matchesAny)
-                .count();
+        return (int) other.asStream()
+                          .filter(this::matchesAny)
+                          .count();
     }
 
     public List<String> diff(FieldsOfStudy other) {
-        return asStream(this)
+        return asStream()
                 .filter(not(other::matchesAny))
                 .sorted()
                 .toList();
@@ -73,10 +75,10 @@ public class FieldsOfStudy {
         return main.equals(value) || secondary.contains(value);
     }
 
-    private static Stream<String> asStream(FieldsOfStudy other) {
+    private Stream<String> asStream() {
         return Stream.concat(
-                Stream.of(other.main),
-                other.secondary.stream()
+                Stream.of(main),
+                secondary.stream()
         );
     }
 }

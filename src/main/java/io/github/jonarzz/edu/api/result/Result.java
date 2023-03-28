@@ -8,6 +8,10 @@ public interface Result<T> {
 
     boolean isOk();
 
+    default boolean isNotOk() {
+        return !isOk();
+    }
+
     T getSubject();
 
     String getMessage();
@@ -15,4 +19,6 @@ public interface Result<T> {
     default Optional<Event> toEvent() {
         return Optional.empty();
     }
+
+    <M> Result<M> mapFailure();
 }
